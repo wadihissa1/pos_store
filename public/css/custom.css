@@ -209,9 +209,9 @@ a:hover {
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 50%;
-    border: 2px solid var(--card-shadow);
+    border: 2px solid var(--primary-color);
     background: #fff;
-    color: #363636;
+    color: var(--primary-color);
     cursor: pointer;
     display: flex;
     align-items: center;
