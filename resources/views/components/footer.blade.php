@@ -18,7 +18,7 @@
             </div>
             <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop">
                 <p class="has-text-weight-bold is-size-7 is-uppercase has-text-grey">Contact</p>
-                <a href="https://wa.me/961XXXXXXXX" class="footer-whatsapp" target="_blank" rel="noopener noreferrer">
+                <a href="https://wa.me/96170604010" class="footer-whatsapp" target="_blank" rel="noopener noreferrer">
                     <span class="icon is-small"><i class="fab fa-whatsapp"></i></span>
                     <span>Chat on WhatsApp</span>
                 </a>

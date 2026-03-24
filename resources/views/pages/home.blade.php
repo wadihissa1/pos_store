@@ -14,7 +14,7 @@
                         <p class="subtitle is-5 mt-4">Quality products, easy ordering. Browse our catalog or reach us on WhatsApp for a smooth experience.</p>
                         <div class="buttons mt-4">
                             <a href="{{ route('products.index') }}" class="button is-primary is-medium">Browse Products</a>
-                            <a href="https://wa.me/9613464695" class="button is-success is-outlined is-medium" target="_blank" rel="noopener noreferrer">Contact via WhatsApp</a>
+                            <a href="https://wa.me/96170604010" class="button is-success is-outlined is-medium" target="_blank" rel="noopener noreferrer">Contact via WhatsApp</a>
                         </div>
                     </div>
                     <div class="column is-half-desktop">
@@ -73,7 +73,7 @@
         <div class="container has-text-centered">
             <h2 class="title is-3 has-text-white">Order Easily via WhatsApp</h2>
             <p class="subtitle is-5 has-text-white mb-5">Get in touch and we'll help you place your order.</p>
-            <a href="https://wa.me/961XXXXXXXX" class="button is-large is-white" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>
+            <a href="https://wa.me/96170604010" class="button is-large is-white" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>
             <p class="has-text-white mt-4 is-size-7">We typically reply within minutes.</p>
         </div>
     </section>

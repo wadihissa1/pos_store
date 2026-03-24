@@ -71,7 +71,7 @@
                 @php
                     $orderLines = collect($items)->map(fn ($item) => $item['product']->name . ' x ' . $item['quantity'])->implode("\n");
                     $whatsappMessage = "Hi! I'd like to place an order:\n\n" . $orderLines . "\n\nTotal: $" . number_format($total, 2);
-                    $whatsappUrl = 'https://wa.me/9613464695?text=' . rawurlencode($whatsappMessage);
+                    $whatsappUrl = 'https://wa.me/96170604010?text=' . rawurlencode($whatsappMessage);
                 @endphp
                 <div class="cart-summary box has-background-light">
                     <div class="columns is-vcentered">
