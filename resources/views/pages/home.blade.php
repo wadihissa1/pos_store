@@ -5,21 +5,21 @@
 @section('content')
     <section class="hero is-medium has-background-light hero--compact animate-on-scroll">
         <div class="hero-body">
-            <div class="container">
-                <div class="columns is-vcentered is-variable is-5">
-                    <div class="column is-half-desktop">
-                        <h1 class="title is-2 has-text-weight-bold">
-                            Your Store, <span class="has-text-primary">Simplified</span>
+            <div class="container container--home">
+                <div class="columns is-vcentered is-variable is-5 hero-columns">
+                    <div class="column is-half-desktop hero-column hero-column--text">
+                        <h1 class="title is-2 has-text-weight-bold hero-title">
+                            Care &amp; Beauty, <span class="has-text-primary">Curated for You</span>
                         </h1>
-                        <p class="subtitle is-5 mt-4">Quality products, easy ordering. Browse our catalog or reach us on WhatsApp for a smooth experience.</p>
-                        <div class="buttons mt-4">
+                        <p class="subtitle is-5 mt-4 hero-subtitle">Quality products, easy ordering. Browse our catalog or reach us on WhatsApp for a smooth experience.</p>
+                        <div class="buttons mt-4 hero-actions">
                             <a href="{{ route('products.index') }}" class="button is-primary is-medium">Browse Products</a>
                             <a href="https://wa.me/96170604010" class="button is-success is-outlined is-medium" target="_blank" rel="noopener noreferrer">Contact via WhatsApp</a>
                         </div>
                     </div>
-                    <div class="column is-half-desktop">
-                        <figure class="image">
-                            <img src="{{ asset('images/hero_section.jpeg') }}" alt="Mezher Cosmetics">
+                    <div class="column is-half-desktop hero-column hero-column--visual">
+                        <figure class="image hero-figure">
+                            <img src="{{ asset('images/hero_section.jpeg') }}" alt="Mezher Cosmetics" decoding="async" fetchpriority="high">
                         </figure>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
         </div>
     </section>
 
-    <div class="container">
+    <div class="container container--home">
         <section class="section section--products-bg animate-on-scroll">
             <h2 class="title is-4 mb-5">Latest Products</h2>
             <div class="columns is-multiline is-mobile">
@@ -69,8 +69,8 @@
         </section>
     </div>
 
-    <section class="section has-background-success animate-on-scroll">
-        <div class="container has-text-centered">
+    <section class="section has-background-success animate-on-scroll section--home-cta">
+        <div class="container container--home has-text-centered">
             <h2 class="title is-3 has-text-white">Order Easily via WhatsApp</h2>
             <p class="subtitle is-5 has-text-white mb-5">Get in touch and we'll help you place your order.</p>
             <a href="https://wa.me/96170604010" class="button is-large is-white" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>
@@ -78,7 +78,7 @@
         </div>
     </section>
 
-    <div class="container">
+    <div class="container container--home">
         <section class="section has-background-white-bis animate-on-scroll">
             <h2 class="title is-4 mb-5">Featured Products</h2>
             <div class="columns is-multiline is-mobile">
@@ -117,8 +117,8 @@
         </section>
     </div>
 
-    <section class="section has-background-light animate-on-scroll">
-        <div class="container has-text-centered">
+    <section class="section has-background-light animate-on-scroll section--home-cta">
+        <div class="container container--home has-text-centered">
             <h2 class="title is-4">Check Our Latest Offers</h2>
             <p class="subtitle is-6 mb-5">Don't miss out on special prices and promotions.</p>
             <a href="{{ route('offers.index') }}" class="button is-warning is-medium">View Offers</a>

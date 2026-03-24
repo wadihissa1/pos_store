@@ -49,7 +49,7 @@
                     </p>
                 @endif
 
-                <form action="{{ route('cart.add') }}" method="post" class="product-detail-actions mt-4">
+                <form action="{{ route('cart.add') }}" method="post" class="product-detail-actions">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <div class="field has-addons">

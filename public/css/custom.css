@@ -315,6 +315,110 @@ a:hover {
     padding: 1.5rem 1.5rem;
 }
 
+.hero-figure {
+    margin: 0;
+}
+
+.hero-figure img {
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    object-fit: cover;
+    width: 100%;
+    height: auto;
+    vertical-align: middle;
+}
+
+/* Stacked hero (below desktop): image first, tighter spacing, full-width CTAs — matches is-half-desktop */
+@media screen and (max-width: 1023px) {
+    .hero.hero--compact.is-medium {
+        min-height: 0;
+    }
+
+    .hero--compact .hero-body {
+        padding: 1rem 0.75rem 1.25rem;
+    }
+
+    .hero--compact .hero-body .container {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    .hero--compact .hero-body .columns.hero-columns {
+        display: flex;
+        flex-direction: column;
+        margin-left: 0;
+        margin-right: 0;
+        margin-top: 0;
+    }
+
+    .hero--compact .hero-column--text {
+        order: 2;
+        padding-top: 1rem;
+    }
+
+    .hero--compact .hero-column--visual {
+        order: 1;
+        padding-bottom: 0;
+    }
+
+    .hero--compact .hero-title {
+        font-size: 1.65rem !important;
+        line-height: 1.2;
+    }
+
+    .hero--compact .hero-subtitle {
+        font-size: 1rem !important;
+        line-height: 1.55;
+        margin-top: 0.75rem !important;
+    }
+
+    .hero--compact .hero-figure img {
+        max-height: min(38vw, 240px);
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+    }
+
+    .hero--compact .hero-actions {
+        flex-direction: column;
+        width: 100%;
+        margin-top: 1rem !important;
+        align-items: stretch;
+    }
+
+    .hero--compact .hero-actions .button {
+        width: 100%;
+        margin-right: 0 !important;
+        margin-bottom: 0.5rem;
+    }
+
+    .hero--compact .hero-actions .button:last-child {
+        margin-bottom: 0;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .hero--compact .hero-column--text,
+    .hero--compact .hero-column--visual {
+        order: 0;
+    }
+
+    .hero--compact .hero-figure img {
+        max-height: 420px;
+        object-fit: cover;
+    }
+}
+
+/* Main: Bulma .section defaults to ~3rem top — pull content closer to the navbar */
+main.section {
+    padding-top: 1.25rem;
+}
+
+@media screen and (max-width: 768px) {
+    main.section {
+        padding-top: 1rem;
+    }
+}
+
 /* Navbar */
 .navbar--store {
     position: sticky;
@@ -609,7 +713,7 @@ a:hover {
 /* Product detail page */
 .product-detail-grid {
     display: grid;
-    gap: 2rem;
+    gap: 1.25rem;
 }
 
 .product-detail-grid.animate-on-scroll {
@@ -646,13 +750,14 @@ a:hover {
 }
 
 .product-detail-info {
-    padding: 1.5rem;
+    padding: 1rem 1.1rem;
     background: #fff;
     border-radius: var(--card-radius);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     display: flex;
     flex-direction: column;
     min-height: 0;
+    gap: 0;
 }
 
 @media (min-width: 769px) {
@@ -664,14 +769,14 @@ a:hover {
 .product-detail-title {
     font-size: 1.5rem;
     font-weight: 700;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.35rem;
     line-height: 1.3;
 }
 
 .product-detail-meta {
     font-size: 0.9rem;
     color: #666;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
 }
 
 .product-detail-meta a:hover {
@@ -681,18 +786,18 @@ a:hover {
 .product-detail-unit {
     font-size: 0.85rem;
     color: #666;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.15rem;
 }
 
 .product-detail-price {
     font-size: 1.75rem;
     font-weight: 700;
     color: #363636;
-    margin: 0.5rem 0 0.75rem 0;
+    margin: 0.35rem 0 0.45rem 0;
 }
 
 .product-detail-stock {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .product-detail-stock-qty {
@@ -702,7 +807,7 @@ a:hover {
 }
 
 .product-detail-actions {
-    margin-top: 1rem;
+    margin-top: 0.65rem;
 }
 
 .product-detail-add-cart {
@@ -714,18 +819,23 @@ a:hover {
 }
 
 .product-detail-hr {
-    margin: 1.5rem 0 1rem 0;
+    margin: 1rem 0 0.65rem 0;
 }
 
 .product-detail-description {
     font-size: 0.95rem;
     line-height: 1.5;
+    margin-top: 0;
+}
+
+.product-detail-info > .title.is-5 {
+    margin-bottom: 0.4rem;
 }
 
 .product-detail-barcode {
     font-size: 0.8rem;
     color: #999;
-    margin-top: 1rem;
+    margin-top: 0.65rem;
 }
 
 /* Categories index page */
@@ -761,6 +871,41 @@ a:hover {
 
 .page-header--offers .title {
     margin-bottom: 1.5rem;
+}
+
+/* Products listing + Home: inner .section — light side inset (Bulma spacing ~is-2) */
+.container.container--products > .section.section--compact-top,
+.container.container--home > .section {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+/* Home: full-width bands where .section wraps .container */
+.section.section--home-cta {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+main.section:has(> .container.container--products),
+main.section:has(.container.container--home) {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+}
+
+@media screen and (max-width: 1023px) {
+    main.section:has(> .container.container--products),
+    main.section:has(.container.container--home) {
+        padding-left: 0.65rem;
+        padding-right: 0.65rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    main.section:has(> .container.container--products),
+    main.section:has(.container.container--home) {
+        padding-left: 0.45rem;
+        padding-right: 0.45rem;
+    }
 }
 
 /* Products filters - mobile */
