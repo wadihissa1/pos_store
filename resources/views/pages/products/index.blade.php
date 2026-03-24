@@ -65,9 +65,7 @@
                     <a href="{{ route('products.index') }}" class="button is-link">Clear filters</a>
                 </div>
             @else
-                <nav class="pagination is-centered mt-5" role="navigation">
-                    {{ $products->links() }}
-                </nav>
+                {{ $products->links() }}
             @endif
         </section>
     </div>

@@ -38,9 +38,7 @@
                 </div>
 
                 @if($products->hasPages())
-                    <nav class="pagination is-centered mt-5" role="navigation">
-                        {{ $products->links() }}
-                    </nav>
+                    {{ $products->links() }}
                 @endif
             </section>
         </div>
