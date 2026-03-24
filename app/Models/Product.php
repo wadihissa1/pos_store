@@ -25,7 +25,8 @@ class Product extends Model
         if (! empty($this->image)) {
             return str_starts_with($this->image, 'http') ? $this->image : asset('storage/' . ltrim($this->image, '/'));
         }
-        return 'https://picsum.photos/seed/' . ($this->id ?? 1) . '/600/400';
+
+        return asset('images/mezher_cosmetics_logo.jpg');
     }
 
     protected $casts = [
