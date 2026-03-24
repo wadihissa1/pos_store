@@ -95,7 +95,7 @@
             <div class="columns is-multiline">
                 <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop has-text-centered">
                     <span class="icon is-large has-text-primary"><i class="fas fa-truck fa-2x" aria-hidden="true"></i></span>
-                    <h3 class="title is-5 mt-3">Fast Delivery test</h3>
+                    <h3 class="title is-5 mt-3">Fast Delivery</h3>
                     <p class="subtitle is-6">Quick and reliable delivery to your door.</p>
                 </div>
                 <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop has-text-centered">
