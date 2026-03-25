@@ -9,7 +9,7 @@
                 <div class="columns is-vcentered is-variable is-5 hero-columns">
                     <div class="column is-half-desktop hero-column hero-column--text">
                         <h1 class="title is-2 has-text-weight-bold hero-title">
-                            Care &amp; Beauty, <span class="has-text-primary">Curated for You test</span>
+                            Care &amp; Beauty, <span class="has-text-primary">Curated for You</span>
                         </h1>
                         <p class="subtitle is-5 mt-4 hero-subtitle">Quality products, easy ordering. Browse our catalog or reach us on WhatsApp for a smooth experience.</p>
                         <div class="buttons mt-4 hero-actions">
@@ -136,6 +136,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var cards = track ? track.querySelectorAll('.category-card') : [];
     if (!track || !prevBtn || !nextBtn || cards.length === 0) return;
     var viewport = track.closest('.carousel-viewport');
+    var section = track.closest('.section--categories');
     var gap = 16;
     var cardsPerPage = 3;
     var totalPages = Math.ceil(cards.length / cardsPerPage);
@@ -146,11 +147,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateCarousel() {
+        if (!viewport) return;
+        var viewportWidth = viewport.offsetWidth;
+        // While the section is scroll-animated or hidden, width can be 0 — retry once visible
+        if (!viewportWidth || viewportWidth < 32) {
+            return;
+        }
         cardsPerPage = getCardsPerPage();
         totalPages = Math.max(1, Math.ceil(cards.length / cardsPerPage));
         currentPage = Math.min(currentPage, totalPages - 1);
 
-        var viewportWidth = viewport ? viewport.offsetWidth : track.parentElement.offsetWidth;
         var cardWidth = (viewportWidth - (cardsPerPage - 1) * gap) / cardsPerPage;
 
         track.style.width = (cards.length * cardWidth + (cards.length - 1) * gap) + 'px';
@@ -167,6 +173,12 @@ document.addEventListener('DOMContentLoaded', function () {
         carousel.classList.toggle('carousel--single-page', totalPages <= 1);
     }
 
+    function scheduleUpdate() {
+        requestAnimationFrame(function () {
+            updateCarousel();
+        });
+    }
+
     prevBtn.addEventListener('click', function () {
         if (currentPage > 0) {
             currentPage--;
@@ -181,8 +193,29 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    window.addEventListener('resize', updateCarousel);
-    updateCarousel();
+    window.addEventListener('resize', scheduleUpdate);
+
+    if (viewport && typeof ResizeObserver !== 'undefined') {
+        var ro = new ResizeObserver(function () {
+            scheduleUpdate();
+        });
+        ro.observe(viewport);
+    }
+
+    if (section) {
+        var mo = new MutationObserver(function () {
+            if (section.classList.contains('is-in-view')) {
+                scheduleUpdate();
+            }
+        });
+        mo.observe(section, { attributes: true, attributeFilter: ['class'] });
+    }
+
+    scheduleUpdate();
+    window.addEventListener('load', scheduleUpdate);
+    [0, 100, 300, 600].forEach(function (ms) {
+        setTimeout(scheduleUpdate, ms);
+    });
 });
 </script>
 @endpush
