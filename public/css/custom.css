@@ -272,7 +272,7 @@ a:hover {
     box-shadow: var(--card-shadow);
     transition: transform 0.2s var(--animate-ease);
     box-sizing: border-box;
-    min-width: 0;
+    /* Avoid min-width: 0 — with lazy-loaded imgs it can collapse cards to 0 width before JS sizes them */
 }
 
 .category-card:hover {

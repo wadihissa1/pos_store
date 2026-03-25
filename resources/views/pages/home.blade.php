@@ -51,7 +51,7 @@
                 <div class="carousel-track" id="categoryCarouselTrack">
                     @foreach($categories as $category)
                         <a href="{{ route('categories.show', $category) }}" class="category-card">
-                            <img src="{{ $category->image_url }}" alt="{{ $category->name }}" loading="lazy">
+                            <img src="{{ $category->image_url }}" alt="{{ $category->name }}" loading="{{ $loop->first ? 'eager' : 'lazy' }}" decoding="async"{{ $loop->first ? ' fetchpriority="high"' : '' }}>
                             <div class="category-card-overlay">
                                 <span class="category-card-name">{{ $category->name }}</span>
                                 <span class="category-card-count">{{ $category->products_count }} products</span>
@@ -185,16 +185,27 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateCarousel() {
         if (!viewport) return;
         var gapPx = readGapPx();
-        var vw = viewport.getBoundingClientRect().width;
+        if (!isFinite(gapPx) || gapPx < 0) {
+            gapPx = 16;
+        }
+        var vw = Math.max(
+            viewport.getBoundingClientRect().width || 0,
+            viewport.offsetWidth || 0,
+            viewport.clientWidth || 0
+        );
         if (vw < 32) {
             vw = measureViewportWidth();
         }
+        vw = Math.max(32, vw);
         cardsPerPage = getCardsPerPage();
         totalPages = Math.max(1, Math.ceil(cards.length / cardsPerPage));
         currentPage = Math.min(currentPage, totalPages - 1);
 
         var between = Math.max(0, cardsPerPage - 1);
         var cardWidth = (vw - between * gapPx) / cardsPerPage;
+        if (!isFinite(cardWidth) || cardWidth < 1) {
+            cardWidth = Math.max(1, vw / Math.max(1, cardsPerPage));
+        }
 
         track.style.width = (cards.length * cardWidth + (cards.length - 1) * gapPx) + 'px';
         cards.forEach(function (card) {
