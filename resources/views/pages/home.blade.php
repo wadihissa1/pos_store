@@ -40,7 +40,7 @@
             <p class="has-text-centered mt-5"><a href="{{ route('products.index') }}" class="button is-link">View all products</a></p>
         </section>
 
-        <section class="section animate-on-scroll section--categories">
+        <section class="section section--categories">
             <h2 class="title is-4 mb-5">Categories</h2>
             <div class="category-carousel-wrap">
                 <div class="category-carousel">
@@ -136,7 +136,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var cards = track ? track.querySelectorAll('.category-card') : [];
     if (!track || !prevBtn || !nextBtn || cards.length === 0) return;
     var viewport = track.closest('.carousel-viewport');
-    var section = track.closest('.section--categories');
     var gap = 16;
     var cardsPerPage = 3;
     var totalPages = Math.ceil(cards.length / cardsPerPage);
@@ -146,13 +145,28 @@ document.addEventListener('DOMContentLoaded', function () {
         return window.innerWidth < 769 ? 1 : window.innerWidth < 1024 ? 2 : 3;
     }
 
+    function measureViewportWidth() {
+        var w = viewport.offsetWidth || viewport.clientWidth || 0;
+        if (w >= 32) {
+            return w;
+        }
+        var rect = carousel.getBoundingClientRect();
+        var gapPx = 12;
+        try {
+            gapPx = parseFloat(window.getComputedStyle(carousel).gap) || 12;
+        } catch (e) {}
+        var aw = (prevBtn && prevBtn.offsetWidth) ? prevBtn.offsetWidth : 40;
+        var bw = (nextBtn && nextBtn.offsetWidth) ? nextBtn.offsetWidth : 40;
+        var estimated = rect.width - aw - bw - 2 * gapPx;
+        if (estimated >= 32) {
+            return estimated;
+        }
+        return Math.max(160, Math.min(window.innerWidth - 40, window.innerWidth * 0.78));
+    }
+
     function updateCarousel() {
         if (!viewport) return;
-        var viewportWidth = viewport.offsetWidth;
-        // While the section is scroll-animated or hidden, width can be 0 — retry once visible
-        if (!viewportWidth || viewportWidth < 32) {
-            return;
-        }
+        var viewportWidth = measureViewportWidth();
         cardsPerPage = getCardsPerPage();
         totalPages = Math.max(1, Math.ceil(cards.length / cardsPerPage));
         currentPage = Math.min(currentPage, totalPages - 1);
@@ -200,15 +214,6 @@ document.addEventListener('DOMContentLoaded', function () {
             scheduleUpdate();
         });
         ro.observe(viewport);
-    }
-
-    if (section) {
-        var mo = new MutationObserver(function () {
-            if (section.classList.contains('is-in-view')) {
-                scheduleUpdate();
-            }
-        });
-        mo.observe(section, { attributes: true, attributeFilter: ['class'] });
     }
 
     scheduleUpdate();
