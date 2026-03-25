@@ -36,17 +36,42 @@
                 if (overlay) overlay.addEventListener('click', toggleSidebar);
             }
 
-            // Scroll-triggered animations
+            // Scroll-triggered animations (must reliably reveal on mobile — avoid invisible-but-clickable UI)
+            function revealAnimateOnScroll(el) {
+                if (!el.classList.contains('is-in-view')) {
+                    el.classList.add('is-in-view');
+                }
+            }
+
+            function isElementInViewport(el) {
+                var rect = el.getBoundingClientRect();
+                var vh = window.innerHeight || document.documentElement.clientHeight;
+                var vw = window.innerWidth || document.documentElement.clientWidth;
+                return rect.bottom > 0 && rect.right > 0 && rect.top < vh && rect.left < vw;
+            }
+
             var observer = new IntersectionObserver(function (entries) {
                 entries.forEach(function (entry) {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('is-in-view');
+                        revealAnimateOnScroll(entry.target);
                     }
                 });
-            }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+            }, { threshold: 0, rootMargin: '0px 0px 10% 0px' });
 
             document.querySelectorAll('.animate-on-scroll').forEach(function (el) {
+                if (isElementInViewport(el)) {
+                    revealAnimateOnScroll(el);
+                }
                 observer.observe(el);
+            });
+
+            // After layout/fonts (mobile Chrome), reveal anything that became visible but was missed
+            requestAnimationFrame(function () {
+                document.querySelectorAll('.animate-on-scroll').forEach(function (el) {
+                    if (isElementInViewport(el)) {
+                        revealAnimateOnScroll(el);
+                    }
+                });
             });
         });
     </script>
