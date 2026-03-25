@@ -257,7 +257,7 @@ a:hover {
 
 .carousel-track {
     display: flex;
-    gap: 1rem;
+    gap: 16px;
     transition: transform 0.4s var(--animate-ease);
     will-change: transform;
 }
@@ -271,14 +271,8 @@ a:hover {
     display: block;
     box-shadow: var(--card-shadow);
     transition: transform 0.2s var(--animate-ease);
-    /* If JS cannot measure viewport width yet, avoid 0-width cards (arrows still show) */
-    min-width: 12rem;
-}
-
-@media screen and (max-width: 1023px) {
-    .section--categories .category-card {
-        min-width: min(78vw, 22rem);
-    }
+    box-sizing: border-box;
+    min-width: 0;
 }
 
 .category-card:hover {

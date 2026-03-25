@@ -136,7 +136,25 @@ document.addEventListener('DOMContentLoaded', function () {
     var cards = track ? track.querySelectorAll('.category-card') : [];
     if (!track || !prevBtn || !nextBtn || cards.length === 0) return;
     var viewport = track.closest('.carousel-viewport');
-    var gap = 16;
+
+    function readGapPx() {
+        try {
+            var g = window.getComputedStyle(track).gap || window.getComputedStyle(track).columnGap;
+            if (g) {
+                var px = g.match(/^([\d.]+)px$/i);
+                if (px) {
+                    return parseFloat(px[1]);
+                }
+                var rem = g.match(/^([\d.]+)rem$/i);
+                if (rem) {
+                    var fs = parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16;
+                    return parseFloat(rem[1]) * fs;
+                }
+            }
+        } catch (e) {}
+        return 16;
+    }
+
     var cardsPerPage = 3;
     var totalPages = Math.ceil(cards.length / cardsPerPage);
     var currentPage = 0;
@@ -166,20 +184,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateCarousel() {
         if (!viewport) return;
-        var viewportWidth = measureViewportWidth();
+        var gapPx = readGapPx();
+        var vw = viewport.getBoundingClientRect().width;
+        if (vw < 32) {
+            vw = measureViewportWidth();
+        }
         cardsPerPage = getCardsPerPage();
         totalPages = Math.max(1, Math.ceil(cards.length / cardsPerPage));
         currentPage = Math.min(currentPage, totalPages - 1);
 
-        var cardWidth = (viewportWidth - (cardsPerPage - 1) * gap) / cardsPerPage;
+        var between = Math.max(0, cardsPerPage - 1);
+        var cardWidth = (vw - between * gapPx) / cardsPerPage;
 
-        track.style.width = (cards.length * cardWidth + (cards.length - 1) * gap) + 'px';
+        track.style.width = (cards.length * cardWidth + (cards.length - 1) * gapPx) + 'px';
         cards.forEach(function (card) {
             card.style.width = cardWidth + 'px';
             card.style.flexShrink = '0';
         });
 
-        var offsetPx = -currentPage * cardsPerPage * (cardWidth + gap);
+        /* One “page” scroll distance must match track layout: cpp cards + cpp gaps between groups */
+        var pageStep = cardsPerPage * cardWidth + cardsPerPage * gapPx;
+        var offsetPx = -currentPage * pageStep;
         track.style.transform = 'translateX(' + offsetPx + 'px)';
 
         prevBtn.disabled = currentPage === 0;
