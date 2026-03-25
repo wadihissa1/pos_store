@@ -23,7 +23,10 @@ class Product extends Model
     public function getImageUrlAttribute(): string
     {
         if (! empty($this->image)) {
-            return str_starts_with($this->image, 'http') ? $this->image : asset('storage/' . ltrim($this->image, '/'));
+            $baseUrl = rtrim((string) config('app.pos_asset_url'), '/');
+            $imagePath = ltrim((string) $this->image, '/');
+
+            return $baseUrl.'/'.$imagePath;
         }
 
         return asset('images/mezher_cosmetics_logo.jpg');

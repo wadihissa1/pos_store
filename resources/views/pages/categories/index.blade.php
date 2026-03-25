@@ -3,7 +3,7 @@
 @section('title', 'Categories')
 
 @section('content')
-    <div class="container">
+    <div class="container container--categories">
         <section class="section section--compact-top animate-on-scroll">
             <div class="page-header page-header--categories">
                 <h1 class="title is-3">Shop by Category</h1>

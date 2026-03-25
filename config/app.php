@@ -54,6 +54,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'pos_asset_url' => env('POS_ASSET_URL', rtrim(env('APP_URL', 'http://localhost'), '/').'/storage'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

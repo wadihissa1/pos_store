@@ -16,9 +16,25 @@ class Category extends Model
 
     public function getImageUrlAttribute(): string
     {
+        $posBaseUrl = rtrim((string) config('app.pos_asset_url'), '/');
+
+        // If POS stores a direct category image path in the `categories.image` column,
+        // use it (do NOT require a product relation to be loaded).
+        $categoryImage = $this->image ?? null;
+        if (! empty($categoryImage)) {
+            if (str_starts_with($categoryImage, 'http')) {
+                return $categoryImage;
+            }
+
+            return $posBaseUrl . '/' . ltrim((string) $categoryImage, '/');
+        }
+
+        // Otherwise use the first related product image as the category thumbnail.
         if ($this->relationLoaded('products') && $this->products->isNotEmpty()) {
             return $this->products->first()->image_url;
         }
-        return 'https://picsum.photos/seed/' . ($this->id ?? 1) . '/600/400';
+
+        // Local placeholder (same style as products fallback).
+        return asset('images/mezher_cosmetics_logo.jpg');
     }
 }

@@ -20,9 +20,9 @@
             </div>
         </div>
 
-        <div class="container">
+        <div class="container container--categories-products">
             <section class="section animate-on-scroll">
-                <div class="columns is-multiline is-mobile">
+                <div class="columns is-multiline is-mobile is-variable is-2">
                     @forelse($products as $product)
                         <div class="column is-half-mobile is-one-third-tablet is-one-quarter-desktop product-card-column">
                             @include('components.product-card', ['product' => $product])
