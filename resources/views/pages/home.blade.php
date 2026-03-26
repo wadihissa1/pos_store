@@ -9,7 +9,7 @@
                 <div class="columns is-vcentered is-variable is-5 hero-columns">
                     <div class="column is-half-desktop hero-column hero-column--text">
                         <h1 class="title is-2 has-text-weight-bold hero-title">
-                            Care &amp; Beauty, <span class="has-text-primary">Curated for You</span>
+                            Care &amp test; Beauty, <span class="has-text-primary">Curated for You</span>
                         </h1>
                         <p class="subtitle is-5 mt-4 hero-subtitle">Quality products, easy ordering. Browse our catalog or reach us on WhatsApp for a smooth experience.</p>
                         <div class="buttons mt-4 hero-actions">
