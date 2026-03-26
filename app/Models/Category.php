@@ -37,4 +37,18 @@ class Category extends Model
         // Local placeholder (same style as products fallback).
         return asset('images/mezher_cosmetics_logo.jpg');
     }
+
+    /**
+     * Percentage discount applied at category level, if any.
+     */
+    public function getDiscountPercentageAttribute(): ?float
+    {
+        /** @var \App\Models\DiscountRule|null $rule */
+        $rule = DiscountRule::where('type', DiscountRule::TYPE_CATEGORY)
+            ->where('entity_id', $this->id)
+            ->first();
+
+        return $rule ? (float) $rule->percentage : null;
+    }
 }
+

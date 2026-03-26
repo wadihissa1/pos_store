@@ -42,11 +42,19 @@
             @else
             <div class="category-grid">
                 @foreach($categories as $category)
+                    @php
+                        $categoryDiscount = $category->discount_percentage;
+                    @endphp
                     <a href="{{ route('categories.show', $category) }}" class="category-grid-card">
                         <img src="{{ $category->image_url }}" alt="{{ $category->name }}" loading="lazy">
                         <div class="category-grid-card-overlay">
                             <span class="category-grid-card-name">{{ $category->name }}</span>
                             <span class="category-grid-card-count">{{ $category->products_count }} products</span>
+                            @if(!is_null($categoryDiscount) && $categoryDiscount > 0)
+                                <span class="category-grid-card-sale tag is-danger is-light">
+                                    -{{ rtrim(rtrim(number_format($categoryDiscount, 2), '0'), '.') }}% sale
+                                </span>
+                            @endif
                         </div>
                     </a>
                 @endforeach

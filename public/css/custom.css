@@ -308,6 +308,11 @@ a:hover {
     color: rgba(255, 255, 255, 0.9);
 }
 
+.category-card-sale {
+    align-self: flex-start;
+    margin-top: 0.35rem;
+}
+
 
 /* Button hover */
 .button {
@@ -1024,6 +1029,11 @@ main.section:has(.container.container--categories-products) {
 .category-grid-card-count {
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.9);
+}
+
+.category-grid-card-sale {
+    align-self: flex-start;
+    margin-top: 0.35rem;
 }
 
 .section.animate-on-scroll .category-grid-card {

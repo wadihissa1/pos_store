@@ -25,10 +25,33 @@
                 @endif
 
                 @if($product->defaultUnit)
-                    <p class="product-detail-unit">{{ $product->defaultUnit->label }}</p>
-                    <p class="product-detail-price">${{ number_format($product->defaultUnit->price, 2) }}</p>
-                    @if(isset($product->defaultUnit->multiplier))
-                        <p class="product-detail-meta">Multiplier: {{ $product->defaultUnit->multiplier }}</p>
+                    @php
+                        $unit = $product->defaultUnit;
+                        $discount = $unit->discount_percentage;
+                        $discountedPrice = $unit->discounted_price;
+                    @endphp
+                    <p class="product-detail-unit">{{ $unit->label }}</p>
+                    @if(!is_null($discountedPrice) && $discountedPrice < $unit->price)
+                        <p class="product-detail-price">
+                            <span class="has-text-grey-light" style="text-decoration: line-through; margin-right: 0.5rem;">
+                                ${{ number_format($unit->price, 2) }}
+                            </span>
+                            <span class="has-text-danger">
+                                ${{ number_format($discountedPrice, 2) }}
+                            </span>
+                            @if(!is_null($discount) && $discount > 0)
+                                <span class="tag is-danger is-light" style="margin-left: 0.5rem;">
+                                    -{{ rtrim(rtrim(number_format($discount, 2), '0'), '.') }}%
+                                </span>
+                            @endif
+                        </p>
+                    @else
+                        <p class="product-detail-price">
+                            ${{ number_format($unit->price, 2) }}
+                        </p>
+                    @endif
+                    @if(isset($unit->multiplier))
+                        <p class="product-detail-meta">Multiplier: {{ $unit->multiplier }}</p>
                     @endif
                     <p class="product-detail-stock">
                         @if($product->sellable_quantity > 0)

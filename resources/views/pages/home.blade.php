@@ -50,11 +50,19 @@
             <div class="carousel-viewport">
                 <div class="carousel-track" id="categoryCarouselTrack">
                     @foreach($categories as $category)
+                        @php
+                            $categoryDiscount = $category->discount_percentage;
+                        @endphp
                         <a href="{{ route('categories.show', $category) }}" class="category-card">
                             <img src="{{ $category->image_url }}" alt="{{ $category->name }}" loading="{{ $loop->first ? 'eager' : 'lazy' }}" decoding="async"{{ $loop->first ? ' fetchpriority="high"' : '' }}>
                             <div class="category-card-overlay">
                                 <span class="category-card-name">{{ $category->name }}</span>
                                 <span class="category-card-count">{{ $category->products_count }} products</span>
+                                @if(!is_null($categoryDiscount) && $categoryDiscount > 0)
+                                    <span class="category-card-sale tag is-danger is-light">
+                                        -{{ rtrim(rtrim(number_format($categoryDiscount, 2), '0'), '.') }}% sale
+                                    </span>
+                                @endif
                             </div>
                         </a>
                     @endforeach

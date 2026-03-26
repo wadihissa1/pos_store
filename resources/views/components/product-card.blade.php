@@ -12,10 +12,37 @@
     <div class="card-content">
         <p class="product-card__name">{{ $product->name }}</p>
         @if($product->defaultUnit)
-            <p class="product-card__price">${{ number_format($product->defaultUnit->price, 2) }}</p>
-            <p class="product-card__unit subtitle is-7">{{ $product->defaultUnit->label }}</p>
+            @php
+                $unit = $product->defaultUnit;
+                $discount = $unit->discount_percentage;
+                $discountedPrice = $unit->discounted_price;
+            @endphp
+            @if(!is_null($discountedPrice) && $discountedPrice < $unit->price)
+                <p class="product-card__price">
+                    <span class="has-text-grey-light" style="text-decoration: line-through;">
+                        ${{ number_format($unit->price, 2) }}
+                    </span>
+                    <span class="has-text-danger" style="margin-left: 0.35rem;">
+                        ${{ number_format($discountedPrice, 2) }}
+                    </span>
+                </p>
+                <p class="product-card__unit subtitle is-7">
+                    {{ $unit->label }}
+                    @if(!is_null($discount) && $discount > 0)
+                        <span class="tag is-danger is-light" style="margin-left: 0.35rem;">
+                            -{{ rtrim(rtrim(number_format($discount, 2), '0'), '.') }}%
+                        </span>
+                    @endif
+                </p>
+            @else
+                <p class="product-card__price">
+                    ${{ number_format($unit->price, 2) }}
+                </p>
+                <p class="product-card__unit subtitle is-7">{{ $unit->label }}</p>
+            @endif
         @else
             <p class="product-card__price">${{ number_format($product->cost_price, 2) }}</p>
         @endif
     </div>
 </a>
+
