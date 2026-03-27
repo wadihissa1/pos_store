@@ -338,24 +338,14 @@ a:hover {
     padding: 1.5rem 1.5rem;
 }
 
-.hero,
-.hero-scroll-wrap,
-main,
-.collection-section {
-    position: relative;
-    z-index: 1;
-}
-
 /* Fixed full-viewport hero image: stays behind; content below scrolls over it (see .home-above-fixed-hero) */
 .hero.hero--fixed-image {
     position: relative;
-    z-index: 1;
-    min-height: 100vh;
-    min-height: 100dvh;
+    min-height: min(88vh, 52rem);
     background: transparent !important;
     display: flex;
     flex-direction: column;
-    overflow: visible;
+    /* Do not use overflow:hidden + transform on this section — breaks fixed hero background */
 }
 
 /* If animate-on-scroll is ever added back to the hero, neutralize it (transform breaks position:fixed children) */
@@ -367,21 +357,28 @@ main,
 
 .hero__fixed-bg {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
     width: 100%;
     height: 100vh;
     height: 100dvh;
-    min-height: 100vh;
-    min-height: 100dvh;
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
     z-index: 0;
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
     pointer-events: none;
-    opacity: 1;
+    /* Fade in on load (opacity-only — keeps fixed positioning correct) */
+    opacity: 0;
+    animation: fadeIn 0.65s var(--animate-ease) 0.08s forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .hero__fixed-bg {
+        animation: none;
+        opacity: 1;
+    }
+
     .hero-fixed-inner.animate-on-scroll {
         opacity: 1;
         transform: none;
@@ -522,8 +519,12 @@ main,
     }
 }
 
-/* Hero (mobile): padding only — height from min-height 100vh on .hero.hero--fixed-image */
+/* Hero (mobile): keep compact centered block */
 @media screen and (max-width: 1023px) {
+    .hero.hero--fixed-image.is-medium {
+        min-height: min(78vh, 36rem);
+    }
+
     .hero--fixed-image .hero-body {
         padding: 1rem 0.5rem 1.5rem;
     }
@@ -1166,12 +1167,12 @@ main.section:has(.container.container--categories-products) {
 }
 
 /* Home: full-bleed bands — no horizontal padding on main (was exposing fixed hero at the sides).
-   Transparent main so fixed hero bg is not covered; white bands come from .home-above-fixed-hero. */
+   Opaque background + no bottom padding so the fixed hero image cannot show through below content. */
 main.section:has(.home-above-fixed-hero) {
     padding-left: 0;
     padding-right: 0;
     padding-bottom: 0;
-    background-color: transparent;
+    background-color: #fff;
 }
 
 /* Short pages: grow main so the area above the footer stays solid white, not the hero */
