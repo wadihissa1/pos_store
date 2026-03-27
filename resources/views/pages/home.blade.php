@@ -7,7 +7,7 @@
     <section class="hero is-medium hero--compact hero--fixed-image">
         <div
             class="hero__fixed-bg"
-            style="background-image: url('{{ asset('images/female-model-wearing-pink-lipgloss-adn-white-flowers (1).jpg') }}');"
+            style="background-image: url('{{ asset('images/female-model-pink-lipgloss-white-flowers.jpg') }}');"
             aria-hidden="true"
         ></div>
         <div class="hero-body">
