@@ -338,14 +338,24 @@ a:hover {
     padding: 1.5rem 1.5rem;
 }
 
+.hero,
+.hero-scroll-wrap,
+main,
+.collection-section {
+    position: relative;
+    z-index: 1;
+}
+
 /* Fixed full-viewport hero image: stays behind; content below scrolls over it (see .home-above-fixed-hero) */
 .hero.hero--fixed-image {
     position: relative;
-    min-height: min(88vh, 52rem);
+    z-index: 1;
+    min-height: 100vh;
+    min-height: 100dvh;
     background: transparent !important;
     display: flex;
     flex-direction: column;
-    /* Do not use overflow:hidden + transform on this section — breaks fixed hero background */
+    overflow: visible;
 }
 
 /* If animate-on-scroll is ever added back to the hero, neutralize it (transform breaks position:fixed children) */
@@ -357,28 +367,21 @@ a:hover {
 
 .hero__fixed-bg {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    inset: 0;
     width: 100%;
     height: 100vh;
     height: 100dvh;
-    z-index: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
     background-size: cover;
-    background-position: center top;
+    background-position: center center;
     background-repeat: no-repeat;
+    z-index: 0;
     pointer-events: none;
-    /* Fade in on load (opacity-only — keeps fixed positioning correct) */
-    opacity: 0;
-    animation: fadeIn 0.65s var(--animate-ease) 0.08s forwards;
+    opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .hero__fixed-bg {
-        animation: none;
-        opacity: 1;
-    }
-
     .hero-fixed-inner.animate-on-scroll {
         opacity: 1;
         transform: none;
@@ -519,12 +522,8 @@ a:hover {
     }
 }
 
-/* Hero (mobile): keep compact centered block */
+/* Hero (mobile): padding only — height from min-height 100vh on .hero.hero--fixed-image */
 @media screen and (max-width: 1023px) {
-    .hero.hero--fixed-image.is-medium {
-        min-height: min(78vh, 36rem);
-    }
-
     .hero--fixed-image .hero-body {
         padding: 1rem 0.5rem 1.5rem;
     }
@@ -1167,12 +1166,12 @@ main.section:has(.container.container--categories-products) {
 }
 
 /* Home: full-bleed bands — no horizontal padding on main (was exposing fixed hero at the sides).
-   Opaque background + no bottom padding so the fixed hero image cannot show through below content. */
+   Transparent main so fixed hero bg is not covered; white bands come from .home-above-fixed-hero. */
 main.section:has(.home-above-fixed-hero) {
     padding-left: 0;
     padding-right: 0;
     padding-bottom: 0;
-    background-color: #fff;
+    background-color: transparent;
 }
 
 /* Short pages: grow main so the area above the footer stays solid white, not the hero */
