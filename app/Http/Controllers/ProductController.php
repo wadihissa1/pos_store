@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\WebsiteCategory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -11,7 +12,9 @@ class ProductController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = Product::query()->with(['category', 'defaultUnit']);
+        $query = Product::query()
+            ->visibleForStore()
+            ->with(['category', 'defaultUnit', 'websiteSetting.websiteCategory']);
 
         if ($request->filled('q')) {
             $term = $request->q;
@@ -21,23 +24,48 @@ class ProductController extends Controller
             });
         }
 
-        if ($request->filled('category')) {
-            $query->where('category_id', $request->category);
+        if ($request->filled('website_category')) {
+            $wc = (string) $request->website_category;
+            if (ctype_digit($wc)) {
+                $query->whereHas('websiteSetting', function ($q) use ($wc): void {
+                    $q->where('website_category_id', (int) $wc);
+                });
+            } else {
+                $query->forWebsiteCategorySlug($wc);
+            }
         }
 
-        $products = $query->latest()->paginate(12)->withQueryString();
+        if ($request->filled('brand')) {
+            $brand = (string) $request->brand;
+            if (ctype_digit($brand)) {
+                $query->where('category_id', (int) $brand);
+            } else {
+                $query->forBrandSlug($brand);
+            }
+        }
 
-        $categories = Category::query()->orderBy('name')->get();
+        $products = $query->orderedForStore()->paginate(12)->withQueryString();
+
+        $websiteCategories = WebsiteCategory::query()
+            ->orderedForStore()
+            ->get();
+
+        $brands = Category::query()
+            ->orderBy('name')
+            ->get();
 
         return view('pages.products.index', [
             'products' => $products,
-            'categories' => $categories,
+            'websiteCategories' => $websiteCategories,
+            'brands' => $brands,
         ]);
     }
 
     public function show(Product $product): View
     {
-        $product->load(['category', 'defaultUnit']);
+        abort_unless($product->websiteSetting?->is_visible, 404);
+
+        $product->load(['category', 'defaultUnit', 'websiteSetting.websiteCategory']);
 
         return view('pages.products.show', [
             'product' => $product,

@@ -16,20 +16,28 @@
                 <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
             </div>
             <div class="product-detail-info">
+                @php
+                    $wc = $product->websiteSetting?->websiteCategory;
+                    $unit = $product->defaultUnit;
+                    $discount = $unit?->discount_percentage;
+                    $discountedPrice = $unit?->discounted_price;
+                @endphp
                 <h1 class="product-detail-title">{{ $product->name }}</h1>
 
+                @if($wc)
+                    <p class="product-detail-meta">
+                        <span class="has-text-grey">Category:</span>
+                        <a href="{{ route('products.index', ['website_category' => $wc->slug ?? $wc->getKey()]) }}">{{ $wc->name }}</a>
+                    </p>
+                @endif
                 @if($product->category)
                     <p class="product-detail-meta">
-                        <a href="{{ route('categories.show', $product->category) }}">{{ $product->category->name }}</a>
+                        <span class="has-text-grey">Brand:</span>
+                        <a href="{{ route('collection.show', $product->category) }}">{{ $product->category->name }}</a>
                     </p>
                 @endif
 
-                @if($product->defaultUnit)
-                    @php
-                        $unit = $product->defaultUnit;
-                        $discount = $unit->discount_percentage;
-                        $discountedPrice = $unit->discounted_price;
-                    @endphp
+                @if($unit)
                     <p class="product-detail-unit">{{ $unit->label }}</p>
                     @if(!is_null($discountedPrice) && $discountedPrice < $unit->price)
                         <p class="product-detail-price">
@@ -81,7 +89,7 @@
                             <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ $product->isInStock() ? min($product->sellable_quantity ?: 999, 999) : 1 }}" class="input" style="width: 5rem;">
                         </div>
                         <div class="control">
-                            <button type="submit" class="button is-primary" @if(!$product->isInStock()) disabled @endif>
+                            <button type="submit" class="button is-primary is-rounded" @if(!$product->isInStock()) disabled @endif>
                                 Add to Cart
                             </button>
                         </div>

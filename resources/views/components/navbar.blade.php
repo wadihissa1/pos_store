@@ -11,7 +11,20 @@
             <div class="navbar-start">
                 <a class="navbar-item" href="{{ route('home') }}">Home</a>
                 <a class="navbar-item" href="{{ route('products.index') }}">Products</a>
-                <a class="navbar-item" href="{{ route('categories.index') }}">Categories</a>
+                @if(isset($navWebsiteCategories) && $navWebsiteCategories->isNotEmpty())
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link navbar-link--categories" href="{{ route('products.index') }}">Categories</a>
+                        <div class="navbar-dropdown">
+                            @foreach($navWebsiteCategories as $wc)
+                                @php
+                                    $wcParam = $wc->slug ?? (string) $wc->getKey();
+                                @endphp
+                                <a class="navbar-item" href="{{ route('products.index', ['website_category' => $wcParam]) }}">{{ $wc->name }}</a>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+                <a class="navbar-item" href="{{ route('collection.index') }}">Collection</a>
                 <a class="navbar-item" href="{{ route('offers.index') }}">Offers</a>
             </div>
             <div class="navbar-end">
@@ -48,3 +61,24 @@
         </div>
     </div>
 </nav>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var link = document.querySelector('.navbar-link--categories');
+    if (!link) return;
+    var mq = window.matchMedia('(max-width: 1023px)');
+    function onCategoriesClick(e) {
+        if (!mq.matches) return;
+        e.preventDefault();
+        var parent = link.closest('.navbar-item.has-dropdown');
+        if (parent) parent.classList.toggle('is-active');
+    }
+    link.addEventListener('click', onCategoriesClick);
+    mq.addEventListener('change', function () {
+        var parent = link.closest('.navbar-item.has-dropdown');
+        if (parent) parent.classList.remove('is-active');
+    });
+});
+</script>
+@endpush

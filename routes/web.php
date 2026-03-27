@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\ProductController;
@@ -13,8 +13,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
-Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
+Route::redirect('/categories', '/collection');
+Route::get('/collection', [CollectionController::class, 'index'])->name('collection.index');
+Route::get('/collection/{category}', [CollectionController::class, 'show'])->name('collection.show');
 
 Route::get('/offers', [OfferController::class, 'index'])->name('offers.index');
 

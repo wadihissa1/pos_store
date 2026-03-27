@@ -3,135 +3,159 @@
 @section('title', 'Home')
 
 @section('content')
-    <section class="hero is-medium has-background-light hero--compact animate-on-scroll">
+    {{-- animate-on-scroll only on inner content — not on section (would break fixed bg). Image fades via CSS. --}}
+    <section class="hero is-medium hero--compact hero--fixed-image">
+        <div
+            class="hero__fixed-bg"
+            style="background-image: url('{{ asset('images/female-model-wearing-pink-lipgloss-adn-white-flowers (1).jpg') }}');"
+            aria-hidden="true"
+        ></div>
         <div class="hero-body">
             <div class="container container--home">
-                <div class="columns is-vcentered is-variable is-5 hero-columns">
-                    <div class="column is-half-desktop hero-column hero-column--text">
-                        <h1 class="title is-2 has-text-weight-bold hero-title">
-                            Care &amp; Beauty, <span class="has-text-primary">Curated for You</span>
-                        </h1>
-                        <p class="subtitle is-5 mt-4 hero-subtitle">Quality products, easy ordering. Browse our catalog or reach us on WhatsApp for a smooth experience.</p>
-                        <div class="buttons mt-4 hero-actions">
-                            <a href="{{ route('products.index') }}" class="button is-primary is-medium">Browse Products</a>
-                            <a href="https://wa.me/96170604010" class="button is-success is-outlined is-medium" target="_blank" rel="noopener noreferrer">Contact via WhatsApp</a>
-                        </div>
-                    </div>
-                    <div class="column is-half-desktop hero-column hero-column--visual">
-                        <figure class="image hero-figure">
-                            <img src="{{ asset('images/hero_section.jpeg') }}" alt="Mezher Cosmetics" decoding="async" fetchpriority="high">
-                        </figure>
-                    </div>
+                <div class="hero-fixed-inner has-text-centered animate-on-scroll">
+                    <a href="{{ route('products.index') }}" class="button is-white is-small is-rounded">Browse products</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <div class="container container--home">
-        <section class="section section--products-bg animate-on-scroll">
-            <h2 class="title is-4 mb-5">Latest Products</h2>
-            <div class="columns is-multiline is-mobile">
-                @foreach($latestProducts as $product)
-                    <div class="column is-half-mobile is-one-quarter-tablet product-card-column">
-                        @include('components.product-card', ['product' => $product])
-                    </div>
-                @endforeach
-            </div>
-            <p class="has-text-centered mt-5"><a href="{{ route('products.index') }}" class="button is-link">View all products</a></p>
-        </section>
-
-        <section class="section section--categories">
-            <h2 class="title is-4 mb-5">Categories</h2>
-            <div class="category-carousel-wrap">
-                <div class="category-carousel">
-            <button type="button" class="carousel-arrow carousel-arrow--prev" aria-label="Previous categories">
-                <i class="fas fa-chevron-left" aria-hidden="true"></i>
-            </button>
-            <div class="carousel-viewport">
-                <div class="carousel-track" id="categoryCarouselTrack">
-                    @foreach($categories as $category)
-                        @php
-                            $categoryDiscount = $category->discount_percentage;
-                        @endphp
-                        <a href="{{ route('categories.show', $category) }}" class="category-card">
-                            <img src="{{ $category->image_url }}" alt="{{ $category->name }}" loading="{{ $loop->first ? 'eager' : 'lazy' }}" decoding="async"{{ $loop->first ? ' fetchpriority="high"' : '' }}>
-                            <div class="category-card-overlay">
-                                <span class="category-card-name">{{ $category->name }}</span>
-                                <span class="category-card-count">{{ $category->products_count }} products</span>
-                                @if(!is_null($categoryDiscount) && $categoryDiscount > 0)
-                                    <span class="category-card-sale tag is-danger is-light">
-                                        -{{ rtrim(rtrim(number_format($categoryDiscount, 2), '0'), '.') }}% sale
-                                    </span>
-                                @endif
+    <div class="home-above-fixed-hero">
+        <div class="home-content-band home-content-band--products-bg">
+            <div class="container container--home">
+                <section class="section animate-on-scroll">
+                    <h2 class="title is-4 mb-5">Latest Products</h2>
+                    <div class="columns is-multiline is-mobile">
+                        @foreach($latestProducts as $product)
+                            <div class="column is-half-mobile is-one-quarter-tablet product-card-column">
+                                @include('components.product-card', ['product' => $product])
                             </div>
-                        </a>
-                    @endforeach
-                </div>
+                        @endforeach
+                    </div>
+                    <p class="has-text-centered mt-5"><a href="{{ route('products.index') }}" class="button is-link is-rounded">View all products</a></p>
+                </section>
             </div>
-            <button type="button" class="carousel-arrow carousel-arrow--next" aria-label="Next categories">
-                <i class="fas fa-chevron-right" aria-hidden="true"></i>
-            </button>
-                </div>
+        </div>
+
+        <div class="home-content-band home-content-band--categories">
+            <div class="container container--home">
+                <section class="section section--categories">
+                    <h2 class="title is-4 mb-5">Shop by category</h2>
+                    <div class="category-carousel-wrap">
+                        <div class="category-carousel">
+                    <button type="button" class="carousel-arrow carousel-arrow--prev" aria-label="Previous categories">
+                        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                    </button>
+                    <div class="carousel-viewport">
+                        <div class="carousel-track" id="categoryCarouselTrack">
+                            @foreach($categories as $category)
+                                @php
+                                    $categoryDiscount = $category->discount_percentage;
+                                @endphp
+                                <a href="{{ route('products.index', ['website_category' => $category->slug ?? $category->getKey()]) }}" class="category-card">
+                                    <img src="{{ $category->image_url }}" alt="{{ $category->name }}" loading="{{ $loop->first ? 'eager' : 'lazy' }}" decoding="async"{{ $loop->first ? ' fetchpriority="high"' : '' }}>
+                                    <div class="category-card-overlay">
+                                        <span class="category-card-name">{{ $category->name }}</span>
+                                        <span class="category-card-count">{{ $category->products_count }} products</span>
+                                        @if(!is_null($categoryDiscount) && $categoryDiscount > 0)
+                                            <span class="category-card-sale tag is-danger is-light">
+                                                -{{ rtrim(rtrim(number_format($categoryDiscount, 2), '0'), '.') }}% sale
+                                            </span>
+                                        @endif
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                    <button type="button" class="carousel-arrow carousel-arrow--next" aria-label="Next categories">
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                    </button>
+                        </div>
+                    </div>
+                    <p class="has-text-centered mt-5"><a href="{{ route('collection.index') }}" class="button is-primary is-rounded">View collection</a></p>
+                </section>
             </div>
-            <p class="has-text-centered mt-5"><a href="{{ route('categories.index') }}" class="button is-primary">View all categories</a></p>
-        </section>
-    </div>
+        </div>
 
     <section class="section has-background-success animate-on-scroll section--home-cta">
         <div class="container container--home has-text-centered">
             <h2 class="title is-3 has-text-white">Order Easily via WhatsApp</h2>
             <p class="subtitle is-5 has-text-white mb-5">Get in touch and we'll help you place your order.</p>
-            <a href="https://wa.me/96170604010" class="button is-large is-white" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>
+            <a href="https://wa.me/96170604010" class="button is-large is-white is-rounded" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>
             <p class="has-text-white mt-4 is-size-7">We typically reply within minutes.</p>
         </div>
     </section>
 
-    <div class="container container--home">
-        <section class="section has-background-white-bis animate-on-scroll">
-            <h2 class="title is-4 mb-5">Featured Products</h2>
-            <div class="columns is-multiline is-mobile">
-                @foreach($featuredProducts ?? [] as $product)
-                    <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop product-card-column">
-                        @include('components.product-card', ['product' => $product])
+        <div class="home-content-band home-content-band--white-bis">
+            <div class="container container--home">
+                <section class="section animate-on-scroll">
+                    <h2 class="title is-4 mb-5">Featured Products</h2>
+                    <div class="columns is-multiline is-mobile">
+                        @foreach($featuredProducts ?? [] as $product)
+                            <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop product-card-column">
+                                @include('components.product-card', ['product' => $product])
+                            </div>
+                        @endforeach
                     </div>
-                @endforeach
+                </section>
             </div>
-        </section>
+        </div>
 
-        <section class="section animate-on-scroll">
-            <h2 class="title is-4 has-text-centered mb-5">Why Choose Us</h2>
-            <div class="columns is-multiline">
-                <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop has-text-centered">
-                    <span class="icon is-large has-text-primary"><i class="fas fa-truck fa-2x" aria-hidden="true"></i></span>
-                    <h3 class="title is-5 mt-3">Fast Delivery</h3>
-                    <p class="subtitle is-6">Quick and reliable delivery to your door.</p>
-                </div>
-                <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop has-text-centered">
-                    <span class="icon is-large has-text-primary"><i class="fas fa-shield-alt fa-2x" aria-hidden="true"></i></span>
-                    <h3 class="title is-5 mt-3">Quality Assured</h3>
-                    <p class="subtitle is-6">We source only the best products for you.</p>
-                </div>
-                <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop has-text-centered">
-                    <span class="icon is-large has-text-primary"><i class="fas fa-headset fa-2x" aria-hidden="true"></i></span>
-                    <h3 class="title is-5 mt-3">Support</h3>
-                    <p class="subtitle is-6">Friendly support when you need it.</p>
-                </div>
-                <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop has-text-centered">
-                    <span class="icon is-large has-text-primary"><i class="fas fa-tag fa-2x" aria-hidden="true"></i></span>
-                    <h3 class="title is-5 mt-3">Great Offers</h3>
-                    <p class="subtitle is-6">Regular deals and special prices.</p>
-                </div>
+        @if(isset($offerProducts) && $offerProducts->isNotEmpty())
+        <div class="home-content-band home-content-band--products-bg">
+            <div class="container container--home">
+                <section class="section animate-on-scroll section--home-offers">
+                    <h2 class="title is-4 mb-5">Offers</h2>
+                    <div class="home-offers-scroll" role="region" aria-label="Offer products" tabindex="0">
+                        @foreach($offerProducts as $product)
+                            <div class="home-offers-scroll__item product-card-column">
+                                @include('components.product-card', ['product' => $product])
+                            </div>
+                        @endforeach
+                    </div>
+                    <p class="has-text-centered mt-5"><a href="{{ route('offers.index') }}" class="button is-warning is-rounded">View all offers</a></p>
+                </section>
             </div>
-        </section>
-    </div>
+        </div>
+        @endif
+
+        <div class="home-content-band">
+            <div class="container container--home">
+                <section class="section animate-on-scroll">
+                    <h2 class="title is-4 has-text-centered mb-5">Why Choose Us</h2>
+                    <div class="columns is-multiline">
+                        <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop has-text-centered">
+                            <span class="icon is-large has-text-primary"><i class="fas fa-truck fa-2x" aria-hidden="true"></i></span>
+                            <h3 class="title is-5 mt-3">Fast Delivery</h3>
+                            <p class="subtitle is-6">Quick and reliable delivery to your door.</p>
+                        </div>
+                        <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop has-text-centered">
+                            <span class="icon is-large has-text-primary"><i class="fas fa-shield-alt fa-2x" aria-hidden="true"></i></span>
+                            <h3 class="title is-5 mt-3">Quality Assured</h3>
+                            <p class="subtitle is-6">We source only the best products for you.</p>
+                        </div>
+                        <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop has-text-centered">
+                            <span class="icon is-large has-text-primary"><i class="fas fa-headset fa-2x" aria-hidden="true"></i></span>
+                            <h3 class="title is-5 mt-3">Support</h3>
+                            <p class="subtitle is-6">Friendly support when you need it.</p>
+                        </div>
+                        <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop has-text-centered">
+                            <span class="icon is-large has-text-primary"><i class="fas fa-tag fa-2x" aria-hidden="true"></i></span>
+                            <h3 class="title is-5 mt-3">Great Offers</h3>
+                            <p class="subtitle is-6">Regular deals and special prices.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
 
     <section class="section has-background-light animate-on-scroll section--home-cta">
         <div class="container container--home has-text-centered">
             <h2 class="title is-4">Check Our Latest Offers</h2>
             <p class="subtitle is-6 mb-5">Don't miss out on special prices and promotions.</p>
-            <a href="{{ route('offers.index') }}" class="button is-warning is-medium">View Offers</a>
+            <a href="{{ route('offers.index') }}" class="button is-warning is-medium is-rounded">View Offers</a>
         </div>
     </section>
+    </div>
 @endsection
 
 @push('scripts')

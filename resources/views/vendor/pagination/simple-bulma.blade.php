@@ -1,5 +1,5 @@
 @if ($paginator->hasPages())
-    <nav class="pagination is-centered is-small mt-5" role="navigation" aria-label="{{ __('Pagination Navigation') }}">
+    <nav class="pagination is-centered is-small is-rounded mt-5" role="navigation" aria-label="{{ __('Pagination Navigation') }}">
         @if ($paginator->onFirstPage())
             <a class="pagination-previous" disabled aria-label="@lang('pagination.previous')">&lsaquo;</a>
         @else

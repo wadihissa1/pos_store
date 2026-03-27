@@ -40,12 +40,19 @@ class CartController extends Controller
     public function add(Request $request): RedirectResponse
     {
         $request->validate([
-            'product_id' => 'required|exists:products,id',
+            'product_id' => 'required|integer|exists:products,id',
             'quantity' => 'required|integer|min:1|max:999',
         ]);
 
         $productId = (int) $request->product_id;
         $quantity = (int) $request->quantity;
+
+        $visible = Product::query()->visibleForStore()->whereKey($productId)->exists();
+        if (! $visible) {
+            return redirect()
+                ->back()
+                ->withErrors(['product_id' => 'This product is not available for purchase.']);
+        }
 
         $cart = session('cart', []);
         $current = $cart[$productId]['quantity'] ?? 0;

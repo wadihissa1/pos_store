@@ -12,7 +12,7 @@
                 <p class="has-text-weight-bold is-size-7 is-uppercase has-text-grey">Shop</p>
                 <ul class="footer-links">
                     <li><a href="{{ route('products.index') }}">Products</a></li>
-                    <li><a href="{{ route('categories.index') }}">Categories</a></li>
+                    <li><a href="{{ route('collection.index') }}">Collection</a></li>
                     <li><a href="{{ route('offers.index') }}">Offers</a></li>
                 </ul>
             </div>

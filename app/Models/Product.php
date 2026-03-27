@@ -51,9 +51,69 @@ class Product extends Model
         return $this->hasOne(ProductUnit::class)->where('is_default', true);
     }
 
+    public function websiteSetting(): HasOne
+    {
+        return $this->hasOne(WebsiteProductSetting::class);
+    }
+
+    public function scopeVisibleForStore(Builder $query): Builder
+    {
+        return $query->whereHas('websiteSetting', function (Builder $q): void {
+            $q->where('is_visible', true);
+        });
+    }
+
+    public function scopeFeaturedForStore(Builder $query): Builder
+    {
+        return $query->visibleForStore()->whereHas('websiteSetting', function (Builder $q): void {
+            $q->where('is_featured', true);
+        });
+    }
+
+    public function scopeLatestForStore(Builder $query): Builder
+    {
+        return $query->visibleForStore()->whereHas('websiteSetting', function (Builder $q): void {
+            $q->where('is_latest', true);
+        });
+    }
+
+    public function scopeOffersForStore(Builder $query): Builder
+    {
+        return $query->visibleForStore()->whereHas('websiteSetting', function (Builder $q): void {
+            $q->where('is_offer', true);
+        });
+    }
+
     public function scopeOffers(Builder $query): Builder
     {
-        return $query->where('stock_units', '>', 50);
+        return $query->offersForStore();
+    }
+
+    public function scopeOrderedForStore(Builder $query): Builder
+    {
+        return $query
+            ->orderByRaw('(select coalesce(sort_order, 0) from website_product_settings where website_product_settings.product_id = products.id limit 1) asc')
+            ->orderByDesc('products.updated_at');
+    }
+
+    public function scopeForWebsiteCategorySlug(Builder $query, string $slug): Builder
+    {
+        return $query->whereHas('websiteSetting', function (Builder $q) use ($slug): void {
+            $q->whereHas('websiteCategory', function (Builder $q2) use ($slug): void {
+                $q2->where('slug', $slug);
+            });
+        });
+    }
+
+    public function scopeForBrandSlug(Builder $query, string $slug): Builder
+    {
+        if (! Category::hasSlugColumn()) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        return $query->whereHas('category', function (Builder $q) use ($slug): void {
+            $q->where('slug', $slug);
+        });
     }
 
     public function isInStock(): bool

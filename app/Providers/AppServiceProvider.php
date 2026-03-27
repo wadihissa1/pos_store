@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\WebsiteCategory;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -28,6 +29,13 @@ class AppServiceProvider extends ServiceProvider
             $cart = session('cart', []);
             $cartCount = array_sum(array_map(fn ($item) => $item['quantity'] ?? 0, $cart));
             $view->with('cartCount', $cartCount);
+        });
+
+        View::composer('components.navbar', function ($view) {
+            $view->with(
+                'navWebsiteCategories',
+                WebsiteCategory::query()->orderedForStore()->get()
+            );
         });
     }
 }

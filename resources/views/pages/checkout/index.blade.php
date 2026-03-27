@@ -35,7 +35,7 @@
 
                 <div class="field mt-5">
                     <div class="control">
-                        <button type="submit" class="button is-primary">Place order (UI only)</button>
+                        <button type="submit" class="button is-primary is-rounded">Place order (UI only)</button>
                     </div>
                 </div>
             </form>

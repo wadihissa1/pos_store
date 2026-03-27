@@ -1,3 +1,9 @@
+@php
+    $ws = $product->relationLoaded('websiteSetting') ? $product->websiteSetting : null;
+    $unit = $product->defaultUnit;
+    $discount = $unit?->discount_percentage;
+    $discountedPrice = $unit?->discounted_price;
+@endphp
 <a href="{{ route('products.show', $product) }}" class="product-card card">
     <div class="card-image product-card__image">
         <img src="{{ $product->image_url }}" alt="{{ $product->name }}" loading="lazy">
@@ -8,15 +14,26 @@
                 <span class="tag is-danger">Out of Stock</span>
             @endif
         </div>
+        @if($ws)
+            <div class="product-card__store-tags">
+                @if($ws->is_featured)
+                    <span class="tag is-warning is-light">Featured</span>
+                @endif
+                @if($ws->is_latest)
+                    <span class="tag is-info is-light">Latest</span>
+                @endif
+                @if($ws->is_offer)
+                    <span class="tag is-danger is-light">Offer</span>
+                @endif
+            </div>
+        @endif
     </div>
     <div class="card-content">
         <p class="product-card__name">{{ $product->name }}</p>
-        @if($product->defaultUnit)
-            @php
-                $unit = $product->defaultUnit;
-                $discount = $unit->discount_percentage;
-                $discountedPrice = $unit->discounted_price;
-            @endphp
+        @if($ws && $ws->relationLoaded('websiteCategory') && $ws->websiteCategory)
+            <p class="product-card__website-category subtitle is-7 mb-1">{{ $ws->websiteCategory->name }}</p>
+        @endif
+        @if($unit)
             @if(!is_null($discountedPrice) && $discountedPrice < $unit->price)
                 <p class="product-card__price">
                     <span class="has-text-grey-light" style="text-decoration: line-through;">
@@ -45,4 +62,3 @@
         @endif
     </div>
 </a>
-

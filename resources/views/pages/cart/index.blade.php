@@ -19,7 +19,7 @@
             @if(empty($items))
                 <div class="box has-text-centered">
                     <p class="mb-4">Your cart is empty.</p>
-                    <a href="{{ route('products.index') }}" class="button is-primary">Browse Products</a>
+                    <a href="{{ route('products.index') }}" class="button is-primary is-rounded">Browse Products</a>
                 </div>
             @else
                 <div class="cart-items">
@@ -40,7 +40,7 @@
                                 <form action="{{ route('cart.remove', $item['product']) }}" method="post" class="cart-item__remove" onsubmit="return confirm('Remove from cart?');">
                                     @csrf
                                     @method('delete')
-                                    <button type="submit" class="button is-danger is-light is-small" aria-label="Remove">
+                                    <button type="submit" class="button is-danger is-light is-small is-rounded" aria-label="Remove">
                                         <span class="icon"><i class="fas fa-trash"></i></span>
                                     </button>
                                 </form>
@@ -55,7 +55,7 @@
                                             <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="1" max="999" class="input cart-item__qty-input">
                                         </div>
                                         <div class="control">
-                                            <button type="submit" class="button is-light">Update</button>
+                                            <button type="submit" class="button is-light is-rounded">Update</button>
                                         </div>
                                     </div>
                                 </form>
@@ -79,8 +79,8 @@
                             <p class="title is-5 mb-0">Total: ${{ number_format($total, 2) }}</p>
                         </div>
                         <div class="column is-narrow">
-                            <a href="{{ route('products.index') }}" class="button is-light mr-2">Continue Shopping</a>
-                            <a href="{{ $whatsappUrl }}" class="button is-success is-medium" target="_blank" rel="noopener noreferrer">
+                            <a href="{{ route('products.index') }}" class="button is-light is-rounded mr-2">Continue Shopping</a>
+                            <a href="{{ $whatsappUrl }}" class="button is-success is-medium is-rounded" target="_blank" rel="noopener noreferrer">
                                 <span class="icon"><i class="fab fa-whatsapp"></i></span>
                                 <span>Send via WhatsApp</span>
                             </a>

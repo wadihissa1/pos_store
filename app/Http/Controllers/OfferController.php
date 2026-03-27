@@ -10,9 +10,9 @@ class OfferController extends Controller
     public function index(): View
     {
         $products = Product::query()
-            ->offers()
-            ->with(['category', 'defaultUnit'])
-            ->latest()
+            ->offersForStore()
+            ->with(['category', 'defaultUnit', 'websiteSetting.websiteCategory'])
+            ->orderedForStore()
             ->paginate(12);
 
         return view('pages.offers.index', [

@@ -4,10 +4,50 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Schema;
 
 class Category extends Model
 {
     protected $fillable = ['name', 'slug', 'description'];
+
+    public static function hasSlugColumn(): bool
+    {
+        return Schema::hasColumn((new static)->getTable(), 'slug');
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return static::hasSlugColumn() ? 'slug' : 'id';
+    }
+
+    public function getRouteKey(): mixed
+    {
+        if (static::hasSlugColumn() && ! empty($this->attributes['slug'] ?? null)) {
+            return $this->slug;
+        }
+
+        return $this->getKey();
+    }
+
+    /**
+     * Resolve collection URLs by id, or by slug when the `categories.slug` column exists.
+     */
+    public function resolveRouteBinding($value, $field = null)
+    {
+        if ($field !== null) {
+            return parent::resolveRouteBinding($value, $field);
+        }
+
+        if (ctype_digit((string) $value)) {
+            return static::query()->where('id', $value)->firstOrFail();
+        }
+
+        if (static::hasSlugColumn()) {
+            return static::query()->where('slug', $value)->firstOrFail();
+        }
+
+        return static::query()->where('id', $value)->firstOrFail();
+    }
 
     public function products(): HasMany
     {
