@@ -1,5 +1,5 @@
 @php
-    $ws = $product->relationLoaded('websiteSetting') ? $product->websiteSetting : null;
+    $ws = $product->websiteSetting;
     $unit = $product->defaultUnit;
     $discount = $unit?->discount_percentage;
     $discountedPrice = $unit?->discounted_price;

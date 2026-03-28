@@ -5,11 +5,7 @@
 @section('content')
     {{-- animate-on-scroll only on inner content — not on section (would break fixed bg). Image fades via CSS. --}}
     <section class="hero is-medium hero--compact hero--fixed-image">
-        <div
-            class="hero__fixed-bg"
-            style="background-image: url('{{ asset('images/female-model-pink-lipgloss-white-flowers.jpg') }}');"
-            aria-hidden="true"
-        ></div>
+        <div class="hero__fixed-bg" aria-hidden="true"></div>
         <div class="hero-body">
             <div class="container container--home">
                 <div class="hero-fixed-inner has-text-centered animate-on-scroll">
