@@ -360,8 +360,6 @@ a:hover {
     height: 100vh;
     height: 100dvh;
     z-index: 1;
-    /* Image in CSS (not inline) so strict Content-Security-Policy style-src does not strip it on prod */
-    background-image: url('../images/female-model-pink-lipgloss-white-flowers.jpg');
     background-size: cover;
     background-position: center top;
     background-repeat: no-repeat;
