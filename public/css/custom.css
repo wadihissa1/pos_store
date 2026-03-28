@@ -364,16 +364,11 @@ a:hover {
     background-position: center top;
     background-repeat: no-repeat;
     pointer-events: none;
-    opacity: 0;
-    animation: fadeIn 0.65s var(--animate-ease) 0.08s forwards;
+    /* Always opaque — fade-in via opacity+animation was invisible on some browsers/prod if keyframes never completed. */
+    opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .hero__fixed-bg {
-        animation: none;
-        opacity: 1;
-    }
-
     .hero-fixed-inner.animate-on-scroll {
         opacity: 1;
         transform: none;
