@@ -251,15 +251,22 @@ a:hover {
 .carousel-viewport {
     flex: 1 1 0%;
     min-width: 0;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     position: relative;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    overscroll-behavior-x: contain;
+}
+
+.carousel-viewport::-webkit-scrollbar {
+    height: 6px;
 }
 
 .carousel-track {
     display: flex;
     gap: 16px;
-    transition: transform 0.4s var(--animate-ease);
-    will-change: transform;
 }
 
 .category-card {

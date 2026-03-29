@@ -188,8 +188,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     var cardsPerPage = 3;
-    var totalPages = Math.ceil(cards.length / cardsPerPage);
+    var totalPages = 1;
     var currentPage = 0;
+    var scrollSyncTimer = null;
 
     function getCardsPerPage() {
         return window.innerWidth < 769 ? 1 : window.innerWidth < 1024 ? 2 : 3;
@@ -214,7 +215,42 @@ document.addEventListener('DOMContentLoaded', function () {
         return Math.max(160, Math.min(window.innerWidth - 40, window.innerWidth * 0.78));
     }
 
-    function updateCarousel() {
+    function pageScrollLeft(page) {
+        var idx = page * cardsPerPage;
+        if (idx >= cards.length) {
+            idx = Math.max(0, cards.length - 1);
+        }
+        return cards[idx].offsetLeft;
+    }
+
+    function updateArrowState() {
+        if (!viewport) return;
+        var maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+        var sl = viewport.scrollLeft;
+        prevBtn.disabled = sl <= 2;
+        nextBtn.disabled = sl >= maxScroll - 2;
+        carousel.classList.toggle('carousel--single-page', maxScroll <= 2);
+    }
+
+    function syncPageFromScroll() {
+        if (!viewport || !cards.length) return;
+        var sl = viewport.scrollLeft;
+        var best = 0;
+        var bestDist = Infinity;
+        var p;
+        for (p = 0; p < totalPages; p++) {
+            var target = pageScrollLeft(p);
+            var d = Math.abs(target - sl);
+            if (d < bestDist) {
+                bestDist = d;
+                best = p;
+            }
+        }
+        currentPage = best;
+    }
+
+    function updateCarousel(opts) {
+        opts = opts || {};
         if (!viewport) return;
         var gapPx = readGapPx();
         if (!isFinite(gapPx) || gapPx < 0) {
@@ -239,43 +275,59 @@ document.addEventListener('DOMContentLoaded', function () {
             cardWidth = Math.max(1, vw / Math.max(1, cardsPerPage));
         }
 
+        track.style.transform = '';
         track.style.width = (cards.length * cardWidth + (cards.length - 1) * gapPx) + 'px';
         cards.forEach(function (card) {
-            /* flex-basis would otherwise override width and break pageStep vs real card size */
             card.style.flex = '0 0 ' + cardWidth + 'px';
         });
 
-        /* One “page” scroll distance must match track layout: cpp cards + cpp gaps between groups */
-        var pageStep = cardsPerPage * cardWidth + cardsPerPage * gapPx;
-        var offsetPx = -currentPage * pageStep;
-        track.style.transform = 'translateX(' + offsetPx + 'px)';
-
-        prevBtn.disabled = currentPage === 0;
-        nextBtn.disabled = currentPage >= totalPages - 1;
-        carousel.classList.toggle('carousel--single-page', totalPages <= 1);
+        var instant = opts.instant !== false;
+        requestAnimationFrame(function () {
+            var left = pageScrollLeft(currentPage);
+            if (instant) {
+                viewport.scrollLeft = left;
+            } else {
+                viewport.scrollTo({ left: left, behavior: 'smooth' });
+            }
+            updateArrowState();
+        });
     }
 
     function scheduleUpdate() {
         requestAnimationFrame(function () {
-            updateCarousel();
+            updateCarousel({ instant: true });
         });
     }
 
-    updateCarousel();
+    updateCarousel({ instant: true });
 
     prevBtn.addEventListener('click', function () {
-        if (currentPage > 0) {
-            currentPage--;
-            updateCarousel();
-        }
+        if (currentPage <= 0) return;
+        currentPage--;
+        requestAnimationFrame(function () {
+            viewport.scrollTo({ left: pageScrollLeft(currentPage), behavior: 'smooth' });
+            updateArrowState();
+        });
     });
 
     nextBtn.addEventListener('click', function () {
-        if (currentPage < totalPages - 1) {
-            currentPage++;
-            updateCarousel();
-        }
+        if (currentPage >= totalPages - 1) return;
+        currentPage++;
+        requestAnimationFrame(function () {
+            viewport.scrollTo({ left: pageScrollLeft(currentPage), behavior: 'smooth' });
+            updateArrowState();
+        });
     });
+
+    viewport.addEventListener('scroll', function () {
+        updateArrowState();
+        if (scrollSyncTimer) {
+            clearTimeout(scrollSyncTimer);
+        }
+        scrollSyncTimer = setTimeout(function () {
+            syncPageFromScroll();
+        }, 80);
+    }, { passive: true });
 
     window.addEventListener('resize', scheduleUpdate);
 
@@ -288,7 +340,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     scheduleUpdate();
     window.addEventListener('load', function () {
-        updateCarousel();
+        updateCarousel({ instant: true });
         scheduleUpdate();
     });
     [0, 100, 300, 600].forEach(function (ms) {
