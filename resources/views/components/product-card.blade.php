@@ -3,6 +3,7 @@
     $unit = $product->defaultUnit;
     $discount = $unit?->discount_percentage;
     $discountedPrice = $unit?->discounted_price;
+    $wsOfferActive = $ws && $ws->is_offer && !is_null($ws->offer_price);
 @endphp
 <a href="{{ route('products.show', $product) }}" class="product-card card">
     <div class="card-image product-card__image">
@@ -34,7 +35,17 @@
             <p class="product-card__website-category subtitle is-7 mb-1">{{ $ws->websiteCategory->name }}</p>
         @endif
         @if($unit)
-            @if(!is_null($discountedPrice) && $discountedPrice < $unit->price)
+            @if($wsOfferActive)
+                <p class="product-card__price">
+                    <span class="has-text-grey-light" style="text-decoration: line-through;">
+                        ${{ number_format($unit->price, 2) }}
+                    </span>
+                    <span class="has-text-danger" style="margin-left: 0.35rem;">
+                        ${{ number_format($ws->offer_price, 2) }}
+                    </span>
+                </p>
+                <p class="product-card__unit subtitle is-7">{{ $unit->label }}</p>
+            @elseif(!is_null($discountedPrice) && $discountedPrice < $unit->price)
                 <p class="product-card__price">
                     <span class="has-text-grey-light" style="text-decoration: line-through;">
                         ${{ number_format($unit->price, 2) }}
@@ -57,6 +68,10 @@
                 </p>
                 <p class="product-card__unit subtitle is-7">{{ $unit->label }}</p>
             @endif
+        @elseif($wsOfferActive)
+            <p class="product-card__price">
+                <span class="has-text-danger">${{ number_format($ws->offer_price, 2) }}</span>
+            </p>
         @else
             <p class="product-card__price">${{ number_format($product->cost_price, 2) }}</p>
         @endif

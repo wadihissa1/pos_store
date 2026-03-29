@@ -16,10 +16,10 @@ class CartController extends Controller
         $total = 0;
 
         foreach ($cart as $productId => $data) {
-            $product = Product::with(['category', 'defaultUnit'])->find($productId);
+            $product = Product::with(['category', 'defaultUnit', 'websiteSetting'])->find($productId);
             if ($product) {
                 $qty = (int) ($data['quantity'] ?? 1);
-                $price = $product->defaultUnit?->price ?? $product->cost_price;
+                $price = $product->storeLinePrice();
                 $subtotal = $price * $qty;
                 $total += $subtotal;
                 $items[] = [

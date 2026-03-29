@@ -116,6 +116,29 @@ class Product extends Model
         });
     }
 
+    /**
+     * Unit price used for cart and checkout (offer price, then unit discount, then list/cost).
+     */
+    public function storeLinePrice(): float
+    {
+        $this->loadMissing('websiteSetting', 'defaultUnit');
+        $ws = $this->websiteSetting;
+        if ($ws && $ws->is_offer && $ws->offer_price !== null) {
+            return (float) $ws->offer_price;
+        }
+        $unit = $this->defaultUnit;
+        if ($unit) {
+            $discounted = $unit->discounted_price;
+            if ($discounted !== null && $discounted < $unit->price) {
+                return (float) $discounted;
+            }
+
+            return (float) $unit->price;
+        }
+
+        return (float) $this->cost_price;
+    }
+
     public function isInStock(): bool
     {
         return (int) $this->stock_units > 0;

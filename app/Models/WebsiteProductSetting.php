@@ -16,6 +16,7 @@ class WebsiteProductSetting extends Model
         'is_featured',
         'is_latest',
         'is_offer',
+        'offer_price',
         'sort_order',
     ];
 
@@ -27,6 +28,7 @@ class WebsiteProductSetting extends Model
             'is_featured' => 'boolean',
             'is_latest' => 'boolean',
             'is_offer' => 'boolean',
+            'offer_price' => 'decimal:2',
             'sort_order' => 'integer',
         ];
     }

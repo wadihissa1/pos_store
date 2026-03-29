@@ -17,10 +17,12 @@
             </div>
             <div class="product-detail-info">
                 @php
-                    $wc = $product->websiteSetting?->websiteCategory;
+                    $ws = $product->websiteSetting;
+                    $wc = $ws?->websiteCategory;
                     $unit = $product->defaultUnit;
                     $discount = $unit?->discount_percentage;
                     $discountedPrice = $unit?->discounted_price;
+                    $wsOfferActive = $ws && $ws->is_offer && !is_null($ws->offer_price);
                 @endphp
                 <h1 class="product-detail-title">{{ $product->name }}</h1>
 
@@ -39,7 +41,17 @@
 
                 @if($unit)
                     <p class="product-detail-unit">{{ $unit->label }}</p>
-                    @if(!is_null($discountedPrice) && $discountedPrice < $unit->price)
+                    @if($wsOfferActive)
+                        <p class="product-detail-price">
+                            <span class="has-text-grey-light" style="text-decoration: line-through; margin-right: 0.5rem;">
+                                ${{ number_format($unit->price, 2) }}
+                            </span>
+                            <span class="has-text-danger">
+                                ${{ number_format($ws->offer_price, 2) }}
+                            </span>
+                            <span class="tag is-danger is-light" style="margin-left: 0.5rem;">Offer</span>
+                        </p>
+                    @elseif(!is_null($discountedPrice) && $discountedPrice < $unit->price)
                         <p class="product-detail-price">
                             <span class="has-text-grey-light" style="text-decoration: line-through; margin-right: 0.5rem;">
                                 ${{ number_format($unit->price, 2) }}
@@ -61,6 +73,19 @@
                     @if(isset($unit->multiplier))
                         <p class="product-detail-meta">Multiplier: {{ $unit->multiplier }}</p>
                     @endif
+                    <p class="product-detail-stock">
+                        @if($product->sellable_quantity > 0)
+                            <span class="tag is-success">In Stock</span>
+                            <span class="product-detail-stock-qty">({{ $product->sellable_quantity }} available)</span>
+                        @else
+                            <span class="tag is-danger">Out of Stock</span>
+                        @endif
+                    </p>
+                @elseif($wsOfferActive)
+                    <p class="product-detail-price">
+                        <span class="has-text-danger">${{ number_format($ws->offer_price, 2) }}</span>
+                        <span class="tag is-danger is-light" style="margin-left: 0.5rem;">Offer</span>
+                    </p>
                     <p class="product-detail-stock">
                         @if($product->sellable_quantity > 0)
                             <span class="tag is-success">In Stock</span>

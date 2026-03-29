@@ -48,19 +48,18 @@ class WebsiteCategory extends Model
 
     public function getImageUrlAttribute(): string
     {
-        $path = $this->image;
+        if (! empty($this->image)) {
+            if (is_string($this->image) && str_starts_with($this->image, 'http')) {
+                return $this->image;
+            }
 
-        if ($path === null || $path === '') {
-            return asset('images/mezher_cosmetics_logo.jpg');
+            $baseUrl = rtrim((string) config('app.pos_asset_url'), '/');
+            $imagePath = ltrim((string) $this->image, '/');
+
+            return $baseUrl.'/'.$imagePath;
         }
 
-        if (is_string($path) && str_starts_with($path, 'http')) {
-            return $path;
-        }
-
-        $base = rtrim((string) config('app.pos_asset_url'), '/');
-
-        return $base !== '' ? $base . '/' . ltrim((string) $path, '/') : asset('images/mezher_cosmetics_logo.jpg');
+        return asset('images/mezher_cosmetics_logo.jpg');
     }
 
     public function getDiscountPercentageAttribute(): ?float
