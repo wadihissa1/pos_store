@@ -12,8 +12,27 @@
         </nav>
 
         <div class="product-detail-grid animate-on-scroll">
-            <div class="product-detail-image">
+            <button
+                type="button"
+                class="product-detail-image product-detail-image--trigger js-product-image-preview"
+                aria-label="View full size image: {{ $product->name }}"
+            >
                 <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+            </button>
+
+            <div
+                id="productImageModal"
+                class="modal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="productImageModalTitle"
+            >
+                <p id="productImageModalTitle" class="is-sr-only">Image preview: {{ $product->name }}</p>
+                <div class="modal-background js-product-image-modal-close" tabindex="-1"></div>
+                <div class="modal-content product-detail-image-modal">
+                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                </div>
+                <button type="button" class="modal-close is-large js-product-image-modal-close" aria-label="Close preview"></button>
             </div>
             <div class="product-detail-info">
                 @php
@@ -134,3 +153,34 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var trigger = document.querySelector('.js-product-image-preview');
+    var modal = document.getElementById('productImageModal');
+    if (!trigger || !modal) return;
+
+    function open() {
+        modal.classList.add('is-active');
+        document.documentElement.classList.add('is-clipped');
+    }
+
+    function close() {
+        modal.classList.remove('is-active');
+        document.documentElement.classList.remove('is-clipped');
+        trigger.focus();
+    }
+
+    trigger.addEventListener('click', open);
+    modal.querySelectorAll('.js-product-image-modal-close').forEach(function (el) {
+        el.addEventListener('click', close);
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.classList.contains('is-active')) {
+            close();
+        }
+    });
+});
+</script>
+@endpush
