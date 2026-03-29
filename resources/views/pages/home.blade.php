@@ -241,8 +241,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         track.style.width = (cards.length * cardWidth + (cards.length - 1) * gapPx) + 'px';
         cards.forEach(function (card) {
-            card.style.width = cardWidth + 'px';
-            card.style.flexShrink = '0';
+            /* flex-basis would otherwise override width and break pageStep vs real card size */
+            card.style.flex = '0 0 ' + cardWidth + 'px';
         });
 
         /* One “page” scroll distance must match track layout: cpp cards + cpp gaps between groups */
@@ -260,6 +260,8 @@ document.addEventListener('DOMContentLoaded', function () {
             updateCarousel();
         });
     }
+
+    updateCarousel();
 
     prevBtn.addEventListener('click', function () {
         if (currentPage > 0) {
@@ -285,7 +287,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     scheduleUpdate();
-    window.addEventListener('load', scheduleUpdate);
+    window.addEventListener('load', function () {
+        updateCarousel();
+        scheduleUpdate();
+    });
     [0, 100, 300, 600].forEach(function (ms) {
         setTimeout(scheduleUpdate, ms);
     });
