@@ -52,7 +52,7 @@
                                     $categoryDiscount = $category->discount_percentage;
                                 @endphp
                                 <a href="{{ route('products.index', ['website_category' => $category->slug ?? $category->getKey()]) }}" class="category-card">
-                                    <img src="{{ $category->image_url }}" alt="{{ $category->name }}" loading="{{ $loop->first ? 'eager' : 'lazy' }}" decoding="async"{{ $loop->first ? ' fetchpriority="high"' : '' }}>
+                                    <img src="{{ $category->image_url }}" alt="{{ $category->name }}" width="800" height="450" loading="{{ $loop->first ? 'eager' : 'lazy' }}" decoding="async"{{ $loop->first ? ' fetchpriority="high"' : '' }}>
                                     <div class="category-card-overlay">
                                         <span class="category-card-name">{{ $category->name }}</span>
                                         <span class="category-card-count">{{ $category->products_count }} products</span>
@@ -191,9 +191,11 @@ document.addEventListener('DOMContentLoaded', function () {
     var totalPages = 1;
     var currentPage = 0;
     var scrollSyncTimer = null;
+    var layoutReadyAttempts = 0;
 
     function getCardsPerPage() {
-        return window.innerWidth < 769 ? 1 : window.innerWidth < 1024 ? 2 : 3;
+        var w = (viewport && (viewport.clientWidth || viewport.getBoundingClientRect().width)) || window.innerWidth;
+        return w < 769 ? 1 : w < 1024 ? 2 : 3;
     }
 
     function measureViewportWidth() {
@@ -282,14 +284,17 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         var instant = opts.instant !== false;
+        /* Two frames: flex widths + track width must commit before offsetLeft is stable */
         requestAnimationFrame(function () {
-            var left = pageScrollLeft(currentPage);
-            if (instant) {
-                viewport.scrollLeft = left;
-            } else {
-                viewport.scrollTo({ left: left, behavior: 'smooth' });
-            }
-            updateArrowState();
+            requestAnimationFrame(function () {
+                var left = pageScrollLeft(currentPage);
+                if (instant) {
+                    viewport.scrollLeft = left;
+                } else {
+                    viewport.scrollTo({ left: left, behavior: 'smooth' });
+                }
+                updateArrowState();
+            });
         });
     }
 
@@ -299,7 +304,21 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    updateCarousel({ instant: true });
+    function layoutWhenViewportReady() {
+        layoutReadyAttempts += 1;
+        var vw = Math.max(
+            viewport.getBoundingClientRect().width || 0,
+            viewport.clientWidth || 0,
+            viewport.offsetWidth || 0
+        );
+        if (vw < 32 && layoutReadyAttempts < 90) {
+            requestAnimationFrame(layoutWhenViewportReady);
+            return;
+        }
+        updateCarousel({ instant: true });
+    }
+
+    layoutWhenViewportReady();
 
     prevBtn.addEventListener('click', function () {
         if (currentPage <= 0) return;
@@ -346,6 +365,11 @@ document.addEventListener('DOMContentLoaded', function () {
     [0, 100, 300, 600].forEach(function (ms) {
         setTimeout(scheduleUpdate, ms);
     });
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(function () {
+            scheduleUpdate();
+        });
+    }
 });
 </script>
 @endpush

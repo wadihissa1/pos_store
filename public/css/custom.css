@@ -258,6 +258,9 @@ a:hover {
     scroll-behavior: smooth;
     scrollbar-width: thin;
     overscroll-behavior-x: contain;
+    /* Lets @container rules size cards from this width on first paint (before JS runs) */
+    container-type: inline-size;
+    container-name: cat-carousel;
 }
 
 .carousel-viewport::-webkit-scrollbar {
@@ -279,8 +282,39 @@ a:hover {
     box-shadow: var(--card-shadow);
     transition: transform 0.2s var(--animate-ease);
     box-sizing: border-box;
-    /* Intrinsic image min-width must not size cards before carousel JS sets widths */
     min-width: 0;
+}
+
+/*
+ * First paint: width must come from the carousel viewport (cqi), not image intrinsic pixels.
+ * JS then sets inline flex — overrides these. Gap in track is 16px.
+ */
+@container cat-carousel (max-width: 768px) {
+    .carousel-track .category-card {
+        flex: 0 0 100cqi;
+        max-width: 100cqi;
+    }
+}
+
+@container cat-carousel (min-width: 769px) and (max-width: 1023px) {
+    .carousel-track .category-card {
+        flex: 0 0 calc((100cqi - 16px) / 2);
+        max-width: calc((100cqi - 16px) / 2);
+    }
+}
+
+@container cat-carousel (min-width: 1024px) {
+    .carousel-track .category-card {
+        flex: 0 0 calc((100cqi - 32px) / 3);
+        max-width: calc((100cqi - 32px) / 3);
+    }
+}
+
+/* Browsers without container queries: cap width so images don’t explode layout before JS */
+@supports not (container-type: inline-size) {
+    .carousel-viewport .carousel-track .category-card {
+        max-width: min(92vw, 28rem);
+    }
 }
 
 .category-card:hover {
