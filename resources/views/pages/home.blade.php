@@ -80,7 +80,7 @@
         <div class="container container--home has-text-centered">
             <h2 class="title is-3 has-text-white">Order Easily via WhatsApp</h2>
             <p class="subtitle is-5 has-text-white mb-5">Get in touch and we'll help you place your order.</p>
-            <a href="https://wa.me/96170604010" class="button is-large is-white is-rounded" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>
+            <a href="{{ config('whatsapp.url') }}" class="button is-large is-white is-rounded" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>
             <p class="has-text-white mt-4 is-size-7">We typically reply within minutes.</p>
         </div>
     </section>

@@ -38,7 +38,7 @@
                     <span class="is-hidden-touch ml-2">Cart</span>
                 </a>
                 <div class="navbar-item">
-                    <a class="button is-success is-rounded" href="https://wa.me/96170604010" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                    <a class="button is-success is-rounded" href="{{ config('whatsapp.url') }}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
                 </div>
             </div>
         </div>
