@@ -3,10 +3,9 @@
         <div class="columns is-multiline">
             <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop">
                 <a href="{{ route('home') }}" class="footer-brand-with-logo">
-                    <img src="{{ asset('images/mezher_cosmetics_logo.jpg') }}" alt="" class="footer-logo-img">
-                    <span class="footer-brand-text">Mezher Cosmetics</span>
+                    <img src="{{ asset('images/loop-logo.png') }}" alt="loop." class="footer-logo-img">
                 </a>
-                <p class="is-size-7 has-text-grey mt-2">Quality cosmetics and beauty products. Browse, discover, order via WhatsApp.</p>
+                <p class="is-size-7 has-text-grey mt-2">Browse, discover, and order easily via WhatsApp.</p>
             </div>
             <div class="column is-full-mobile is-half-tablet is-one-quarter-desktop">
                 <p class="has-text-weight-bold is-size-7 is-uppercase has-text-grey">Shop</p>

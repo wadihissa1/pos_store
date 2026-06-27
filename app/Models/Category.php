@@ -75,7 +75,7 @@ class Category extends Model
         }
 
         // Local placeholder (same style as products fallback).
-        return asset('images/mezher_cosmetics_logo.jpg');
+        return asset('images/loop-logo.png');
     }
 
     /**

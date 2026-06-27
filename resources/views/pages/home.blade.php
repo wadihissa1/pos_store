@@ -4,16 +4,16 @@
 
 @section('content')
     {{-- animate-on-scroll only on inner content — not on section (would break fixed bg). Image fades via CSS. --}}
-    <section class="hero is-medium hero--compact hero--fixed-image">
+    <section class="hero is-medium hero--compact hero--fixed-image hero--banner">
         <div
-            class="hero__fixed-bg"
-            style="background-image: url('{{ asset('images/female-model-pink-lipgloss-white-flowers.jpg') }}');"
+            class="hero__fixed-bg hero__fixed-bg--banner"
+            style="background-image: url('{{ asset('images/hero-summer.png') }}');"
             aria-hidden="true"
         ></div>
         <div class="hero-body">
             <div class="container container--home">
-                <div class="hero-fixed-inner has-text-centered animate-on-scroll">
-                    <a href="{{ route('products.index') }}" class="button is-white is-small is-rounded">Browse products</a>
+                <div class="hero-fixed-inner has-text-centered">
+                    <a href="{{ route('products.index') }}" class="button is-primary is-rounded">Browse products</a>
                 </div>
             </div>
         </div>
@@ -76,7 +76,7 @@
             </div>
         </div>
 
-    <section class="section has-background-success animate-on-scroll section--home-cta">
+    <section class="section has-background-primary animate-on-scroll section--home-cta">
         <div class="container container--home has-text-centered">
             <h2 class="title is-3 has-text-white">Order Easily via WhatsApp</h2>
             <p class="subtitle is-5 has-text-white mb-5">Get in touch and we'll help you place your order.</p>

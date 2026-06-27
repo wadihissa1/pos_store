@@ -59,7 +59,7 @@ class WebsiteCategory extends Model
             return $baseUrl.'/'.$imagePath;
         }
 
-        return asset('images/mezher_cosmetics_logo.jpg');
+        return asset('images/loop-logo.png');
     }
 
     public function getDiscountPercentageAttribute(): ?float

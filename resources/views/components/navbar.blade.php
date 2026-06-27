@@ -3,8 +3,9 @@
     <div class="container">
         <div class="navbar-brand">
             <a class="navbar-item navbar-brand-with-logo" href="{{ route('home') }}">
-                <img src="{{ asset('images/mezher_cosmetics_logo.jpg') }}" alt="" class="navbar-brand-logo-img">
-                <span class="navbar-brand-text">Mezher Cosmetics</span>
+                <span class="navbar-brand-logo-wrap">
+                    <img src="{{ asset('images/loop-logo-navbar.png') }}" alt="loop." class="navbar-brand-logo-img">
+                </span>
             </a>
         </div>
         <div id="navbarMenu" class="navbar-menu navbar-sidebar">
