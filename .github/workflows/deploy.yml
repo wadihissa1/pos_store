@@ -23,6 +23,6 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script_stop: true
           script: |
-            cd domains/mezhercosmeticslb.com/laravel
+            cd domains/looplb.shop/laravel
             chmod +x deploy.sh
             ./deploy.sh
