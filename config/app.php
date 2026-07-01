@@ -56,6 +56,10 @@ return [
 
     'pos_asset_url' => env('POS_ASSET_URL', rtrim(env('APP_URL', 'http://localhost'), '/').'/storage'),
 
+    // When false, hide stock indicators (In/Out of Stock, "N available") in the
+    // storefront and let products be added to cart regardless of stock level.
+    'show_stock' => filter_var(env('SHOW_STOCK', true), FILTER_VALIDATE_BOOLEAN),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

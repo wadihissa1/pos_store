@@ -8,13 +8,15 @@
 <a href="{{ route('products.show', $product) }}" class="product-card card">
     <div class="card-image product-card__image">
         <img src="{{ $product->image_url }}" alt="{{ $product->name }}" loading="lazy">
-        <div class="product-card__badge">
-            @if($product->sellable_quantity > 0)
-                <span class="tag is-success">In Stock</span>
-            @else
-                <span class="tag is-danger">Out of Stock</span>
-            @endif
-        </div>
+        @if(config('app.show_stock'))
+            <div class="product-card__badge">
+                @if($product->sellable_quantity > 0)
+                    <span class="tag is-success">In Stock</span>
+                @else
+                    <span class="tag is-danger">Out of Stock</span>
+                @endif
+            </div>
+        @endif
         @if($ws)
             <div class="product-card__store-tags">
                 @if($ws->is_featured)

@@ -92,36 +92,42 @@
                     @if(isset($unit->multiplier))
                         <p class="product-detail-meta">Multiplier: {{ $unit->multiplier }}</p>
                     @endif
-                    <p class="product-detail-stock">
-                        @if($product->sellable_quantity > 0)
-                            <span class="tag is-success">In Stock</span>
-                            <span class="product-detail-stock-qty">({{ $product->sellable_quantity }} available)</span>
-                        @else
-                            <span class="tag is-danger">Out of Stock</span>
-                        @endif
-                    </p>
+                    @if(config('app.show_stock'))
+                        <p class="product-detail-stock">
+                            @if($product->sellable_quantity > 0)
+                                <span class="tag is-success">In Stock</span>
+                                <span class="product-detail-stock-qty">({{ $product->sellable_quantity }} available)</span>
+                            @else
+                                <span class="tag is-danger">Out of Stock</span>
+                            @endif
+                        </p>
+                    @endif
                 @elseif($wsOfferActive)
                     <p class="product-detail-price">
                         <span class="has-text-danger">${{ number_format($ws->offer_price, 2) }}</span>
                         <span class="tag is-danger is-light" style="margin-left: 0.5rem;">Offer</span>
                     </p>
-                    <p class="product-detail-stock">
-                        @if($product->sellable_quantity > 0)
-                            <span class="tag is-success">In Stock</span>
-                            <span class="product-detail-stock-qty">({{ $product->sellable_quantity }} available)</span>
-                        @else
-                            <span class="tag is-danger">Out of Stock</span>
-                        @endif
-                    </p>
+                    @if(config('app.show_stock'))
+                        <p class="product-detail-stock">
+                            @if($product->sellable_quantity > 0)
+                                <span class="tag is-success">In Stock</span>
+                                <span class="product-detail-stock-qty">({{ $product->sellable_quantity }} available)</span>
+                            @else
+                                <span class="tag is-danger">Out of Stock</span>
+                            @endif
+                        </p>
+                    @endif
                 @else
                     <p class="product-detail-price">${{ number_format($product->cost_price, 2) }}</p>
-                    <p class="product-detail-stock">
-                        @if($product->isInStock())
-                            <span class="tag is-success">In Stock</span>
-                        @else
-                            <span class="tag is-danger">Out of Stock</span>
-                        @endif
-                    </p>
+                    @if(config('app.show_stock'))
+                        <p class="product-detail-stock">
+                            @if($product->isInStock())
+                                <span class="tag is-success">In Stock</span>
+                            @else
+                                <span class="tag is-danger">Out of Stock</span>
+                            @endif
+                        </p>
+                    @endif
                 @endif
 
                 <form action="{{ route('cart.add') }}" method="post" class="product-detail-actions">
@@ -130,10 +136,10 @@
                     <div class="field has-addons">
                         <div class="control">
                             <label for="quantity" class="is-sr-only">Quantity</label>
-                            <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ $product->isInStock() ? min($product->sellable_quantity ?: 999, 999) : 1 }}" class="input" style="width: 5rem;">
+                            <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ (!config('app.show_stock') || $product->isInStock()) ? min($product->sellable_quantity ?: 999, 999) : 1 }}" class="input" style="width: 5rem;">
                         </div>
                         <div class="control">
-                            <button type="submit" class="button is-primary is-rounded" @if(!$product->isInStock()) disabled @endif>
+                            <button type="submit" class="button is-primary is-rounded" @if(config('app.show_stock') && !$product->isInStock()) disabled @endif>
                                 Add to Cart
                             </button>
                         </div>
